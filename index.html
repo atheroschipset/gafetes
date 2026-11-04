@@ -1,0 +1,1432 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}</style>
+<title>Gafetes Escolares</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: barra superior fija con pestañas; contenido en una columna de hasta 1120px.
+   La credencial (CR80, 85.6 x 54 mm) y la lista de asistencia de papel (• / ) son los motivos del sistema. */
+:root {
+  --bg: #edf0ef;
+  --surface: #ffffff;
+  --surface-2: #f5f7f6;
+  --ink: #14202a;
+  --muted: #56666e;
+  --line: #d3dbd9;
+  --accent: #2847a8;
+  --accent-ink: #ffffff;
+  --ok: #1b7a46;
+  --warn: #9a5c06;
+  --bad: #b3302a;
+  --info: #2f6a8c;
+  --c-alumno: #2847a8;
+  --c-papa: #2f6a8c;
+  --c-mama: #8c3f7d;
+  --c-extra: #9a5c06;
+  --shadow: 0 1px 2px rgb(20 32 42 / .06), 0 8px 24px rgb(20 32 42 / .08);
+  --f-display: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --f-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --r: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1417; --surface: #162026; --surface-2: #1c272e; --ink: #e5ecee; --muted: #94a5ac;
+    --line: #2b3940; --accent: #86a2ff; --accent-ink: #0a1230; --ok: #4fc58c; --warn: #e3a64a;
+    --bad: #f2786d; --info: #7db8d9; --c-alumno: #86a2ff; --c-papa: #7db8d9; --c-mama: #dc93cb;
+    --c-extra: #e3a64a; --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 10px 30px rgb(0 0 0 / .35);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1417; --surface: #162026; --surface-2: #1c272e; --ink: #e5ecee; --muted: #94a5ac;
+  --line: #2b3940; --accent: #86a2ff; --accent-ink: #0a1230; --ok: #4fc58c; --warn: #e3a64a;
+  --bad: #f2786d; --info: #7db8d9; --c-alumno: #86a2ff; --c-papa: #7db8d9; --c-mama: #dc93cb;
+  --c-extra: #e3a64a; --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 10px 30px rgb(0 0 0 / .35);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { background: var(--bg); color: var(--ink); }
+body { font-family: var(--f-body); font-size: 15px; line-height: 1.5; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--surface); }
+h1, h2, h3 { font-family: var(--f-display); font-stretch: 85%; line-height: 1.15; margin: 0; text-wrap: balance; }
+h1 { font-size: 1.9rem; font-weight: 800; letter-spacing: -.01em; }
+h2 { font-size: 1.3rem; font-weight: 750; }
+h3 { font-size: 1.02rem; font-weight: 700; }
+p { margin: 0; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 60%, transparent); outline-offset: 2px; }
+.mono, .num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+.eyebrow { font-family: var(--f-display); font-stretch: 80%; text-transform: uppercase; letter-spacing: .09em; font-size: .74rem; font-weight: 700; color: var(--muted); }
+
+/* ---------- Barra superior ---------- */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--surface); border-bottom: 1px solid var(--line); }
+.top-in { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 10px 0; display: grid; gap: 8px; }
+.brand-row { display: flex; align-items: center; gap: 12px; justify-content: space-between; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.brand-mark { width: 34px; height: 22px; border-radius: 4px; background: var(--accent); position: relative; flex: none; }
+.brand-mark::after { content: ""; position: absolute; left: 5px; top: 5px; width: 8px; height: 12px; border-radius: 2px; background: var(--accent-ink); opacity: .85; }
+.brand-mark::before { content: ""; position: absolute; right: 5px; top: 7px; width: 12px; height: 2px; background: var(--accent-ink); opacity: .7; box-shadow: 0 4px 0 var(--accent-ink); }
+.brand b { font-family: var(--f-display); font-stretch: 85%; font-size: 1.12rem; font-weight: 800; display: block; line-height: 1.1; }
+.brand small { color: var(--muted); font-size: .8rem; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tabs { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; margin-inline: -4px; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab { border: 0; background: none; padding: 10px 12px 11px; cursor: pointer; font-weight: 700; color: var(--muted); border-bottom: 3px solid transparent; white-space: nowrap; }
+.tab[aria-current="page"] { color: var(--ink); border-bottom-color: var(--accent); }
+.tab:hover { color: var(--ink); }
+
+.demo-bar { background: color-mix(in srgb, var(--warn) 14%, var(--surface)); border-bottom: 1px solid color-mix(in srgb, var(--warn) 30%, var(--line)); }
+.demo-bar div { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 7px; font-size: .86rem; display: flex; gap: 8px 14px; flex-wrap: wrap; align-items: center; }
+
+main { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 22px 60px; display: grid; gap: 22px; }
+.head { display: flex; align-items: end; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap; }
+.head > div { min-width: 0; display: grid; gap: 4px; }
+
+/* ---------- Controles ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid var(--line); background: var(--surface); padding: 9px 14px; border-radius: 8px; cursor: pointer; font-weight: 700; text-decoration: none; min-height: 40px; }
+.btn:hover { border-color: color-mix(in srgb, var(--ink) 35%, var(--line)); }
+.btn.pri { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn.pri:hover { background: color-mix(in srgb, var(--accent) 88%, var(--ink)); }
+.btn.ok { background: var(--ok); color: var(--surface); border-color: var(--ok); }
+.btn.danger { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 40%, var(--line)); }
+.btn.sm { padding: 5px 10px; min-height: 32px; font-size: .86rem; }
+.btn.big { padding: 14px 18px; min-height: 52px; font-size: 1.02rem; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn svg { width: 18px; height: 18px; flex: none; }
+.link { background: none; border: 0; padding: 0; color: var(--accent); font-weight: 700; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.field { display: grid; gap: 5px; min-width: 0; }
+.field > span { font-size: .82rem; font-weight: 700; color: var(--muted); }
+.field input, .field select, .field textarea, .inp { width: 100%; border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 9px 11px; min-height: 40px; }
+.field textarea { min-height: 70px; resize: vertical; }
+.grid-f { display: grid; gap: 12px 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); }
+.grid-f .wide { grid-column: 1 / -1; }
+.check { display: flex; gap: 10px; align-items: flex-start; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-2); cursor: pointer; }
+.check input { width: 20px; height: 20px; margin: 2px 0 0; flex: none; accent-color: var(--ok); }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 18px; display: grid; gap: 14px; min-width: 0; }
+.panel-h { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.cols { display: grid; gap: 22px; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: start; }
+@media (max-width: 860px) { .cols { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- Contadores del día ---------- */
+.tally { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); overflow: hidden; }
+.tally > div { padding: 14px 16px; border-left: 1px solid var(--line); display: grid; gap: 2px; }
+.tally > div:first-child { border-left: 0; }
+.tally .num { font-size: 1.9rem; font-weight: 600; line-height: 1.1; }
+.tally .num small { font-size: .95rem; color: var(--muted); font-weight: 400; }
+.tally .k { font-size: .82rem; color: var(--muted); font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex: none; }
+@media (max-width: 620px) { .tally { grid-template-columns: repeat(2, minmax(0, 1fr)); } .tally > div:nth-child(3) { border-left: 0; } .tally > div:nth-child(n+3) { border-top: 1px solid var(--line); } }
+
+/* ---------- Estados ---------- */
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 2px 9px; border-radius: 99px; font-size: .8rem; font-weight: 700; white-space: nowrap; border: 1px solid transparent; }
+.pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.s-presente { color: var(--ok); background: color-mix(in srgb, var(--ok) 12%, transparent); }
+.s-tarde { color: var(--warn); background: color-mix(in srgb, var(--warn) 14%, transparent); }
+.s-falta { color: var(--bad); background: color-mix(in srgb, var(--bad) 12%, transparent); }
+.s-pendiente { color: var(--muted); background: var(--surface-2); border-color: var(--line); }
+.s-salio { color: var(--info); background: color-mix(in srgb, var(--info) 13%, transparent); }
+.s-temprano { color: var(--c-mama); background: color-mix(in srgb, var(--c-mama) 12%, transparent); }
+
+.people { display: grid; }
+.person { display: flex; align-items: center; gap: 12px; padding: 9px 4px; border-top: 1px solid var(--line); background: none; border-left: 0; border-right: 0; border-bottom: 0; width: 100%; text-align: left; cursor: pointer; }
+.person:first-child { border-top: 0; }
+.person:hover { background: var(--surface-2); }
+.person .who { min-width: 0; flex: 1; display: grid; }
+.person .who b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.person .who span { font-size: .84rem; color: var(--muted); }
+.flag { color: var(--bad); font-size: .75rem; font-weight: 700; border: 1px solid color-mix(in srgb, var(--bad) 45%, transparent); border-radius: 4px; padding: 0 5px; margin-left: 6px; vertical-align: 2px; }
+
+.av { position: relative; width: 42px; height: 42px; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--line); display: inline-grid; place-items: center; overflow: hidden; flex: none; font-family: var(--f-display); font-weight: 800; color: var(--muted); font-size: .95rem; }
+.av img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.av.lg { width: 96px; height: 120px; font-size: 1.6rem; }
+.av.xl { width: 150px; height: 186px; font-size: 2.2rem; }
+
+/* ---------- Bitácora ---------- */
+.log { display: grid; }
+.log-i { display: grid; grid-template-columns: 54px minmax(0, 1fr); gap: 10px; padding: 10px 0; border-top: 1px solid var(--line); }
+.log-i:first-child { border-top: 0; }
+.log-i .num { font-size: .92rem; font-weight: 600; padding-top: 1px; }
+.log-i .what { display: grid; gap: 3px; min-width: 0; }
+.log-i .what span { font-size: .86rem; color: var(--muted); }
+.motivo { font-size: .88rem; border-left: 3px solid var(--warn); padding: 3px 0 3px 10px; color: var(--ink); background: color-mix(in srgb, var(--warn) 7%, transparent); }
+.empty { padding: 22px; text-align: center; color: var(--muted); border: 1px dashed var(--line); border-radius: var(--r); }
+
+/* ---------- Lista de asistencia ---------- */
+.sheet-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+table.sheet { border-collapse: separate; border-spacing: 0; font-size: .9rem; min-width: 100%; }
+.sheet th, .sheet td { border-bottom: 1px solid var(--line); border-left: 1px solid var(--line); padding: 0; text-align: center; }
+.sheet th { font-weight: 700; font-size: .72rem; color: var(--muted); padding: 6px 2px; background: var(--surface-2); position: sticky; top: 0; }
+.sheet th .num { display: block; font-size: .86rem; color: var(--ink); }
+.sheet .name { position: sticky; left: 0; z-index: 1; background: var(--surface); text-align: left; padding: 6px 10px; border-left: 0; white-space: nowrap; max-width: 190px; overflow: hidden; text-overflow: ellipsis; font-weight: 700; }
+.sheet th.name { background: var(--surface-2); z-index: 2; }
+.sheet .today { background: color-mix(in srgb, var(--accent) 8%, var(--surface)); }
+.sheet th.today { background: color-mix(in srgb, var(--accent) 14%, var(--surface-2)); }
+.cell { width: 32px; height: 34px; border: 0; background: transparent; cursor: pointer; font-family: var(--f-mono); font-size: 1.15rem; font-weight: 600; line-height: 1; }
+.cell:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.cell.A { color: var(--ink); }
+.cell.T { color: var(--warn); }
+.cell.F { color: var(--bad); }
+.cell.f { color: color-mix(in srgb, var(--bad) 55%, var(--muted)); font-weight: 400; }
+.cell.x { cursor: default; color: var(--line); }
+.sheet .tot { padding: 0 10px; font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.legend { display: flex; gap: 6px 18px; flex-wrap: wrap; font-size: .86rem; color: var(--muted); }
+.legend b { font-family: var(--f-mono); font-size: 1.05rem; margin-right: 4px; }
+
+/* ---------- Tarjetas de alumnos ---------- */
+.cards { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); }
+.card { display: flex; gap: 12px; align-items: center; padding: 12px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); cursor: pointer; text-align: left; width: 100%; }
+.card:hover { border-color: color-mix(in srgb, var(--accent) 50%, var(--line)); }
+.card .who { display: grid; min-width: 0; }
+.card .who b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.card .who span { font-size: .84rem; color: var(--muted); }
+
+/* ---------- Credencial CR80 ---------- */
+.creds { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr)); }
+.cred-box { display: grid; gap: 8px; min-width: 0; }
+.cred { --c: var(--c-alumno); aspect-ratio: 85.6 / 54; max-width: 100%; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); display: grid; grid-template-rows: auto 1fr auto; overflow: hidden; container-type: inline-size; }
+.cred.papa { --c: var(--c-papa); } .cred.mama { --c: var(--c-mama); } .cred.extra { --c: var(--c-extra); }
+.cred.off { opacity: .55; filter: grayscale(.8); }
+.cred-band { background: var(--c); color: var(--surface); display: flex; justify-content: space-between; align-items: center; padding: 1.6cqw 4cqw; font-family: var(--f-display); font-stretch: 80%; font-weight: 800; font-size: 4.2cqw; letter-spacing: .06em; text-transform: uppercase; }
+.cred-band svg { width: 6cqw; height: 6cqw; }
+.cred-body { display: grid; grid-template-columns: 27cqw minmax(0, 1fr); gap: 4cqw; padding: 3cqw 4cqw; align-items: center; min-height: 0; }
+.cred-body .av { width: 27cqw; height: 33cqw; border-radius: 2cqw; font-size: 8cqw; }
+.cred-txt { display: grid; gap: .8cqw; min-width: 0; }
+.cred-txt b { font-family: var(--f-display); font-stretch: 85%; font-size: 6cqw; line-height: 1.08; font-weight: 800; }
+.cred-txt span { font-size: 3.8cqw; color: var(--muted); line-height: 1.25; }
+.cred-foot { display: flex; justify-content: space-between; padding: 1.4cqw 4cqw; border-top: 1px solid var(--line); font-size: 3.2cqw; color: var(--muted); }
+.cred-foot .mono { font-size: 3.2cqw; }
+
+/* ---------- Ficha ---------- */
+.ficha-top { display: flex; gap: 18px; align-items: flex-start; flex-wrap: wrap; }
+.ficha-top .meta { display: grid; gap: 6px; min-width: 0; flex: 1; }
+.facts { display: flex; gap: 6px 18px; flex-wrap: wrap; color: var(--muted); font-size: .92rem; }
+.facts b { color: var(--ink); font-family: var(--f-mono); font-weight: 600; }
+.alert { border: 1px solid color-mix(in srgb, var(--bad) 45%, var(--line)); background: color-mix(in srgb, var(--bad) 8%, var(--surface)); border-radius: 8px; padding: 10px 12px; display: grid; gap: 3px; }
+.alert b { color: var(--bad); font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; font-family: var(--f-display); }
+.tutor-forms { display: grid; gap: 14px; }
+.tutor-f { border: 1px solid var(--line); border-radius: var(--r); padding: 14px; display: grid; gap: 12px; border-top: 4px solid var(--c); }
+.tutor-f.papa { --c: var(--c-papa); } .tutor-f.mama { --c: var(--c-mama); } .tutor-f.extra { --c: var(--c-extra); }
+.uploads { display: flex; gap: 14px; flex-wrap: wrap; }
+.upl { display: grid; gap: 6px; justify-items: start; }
+.upl label { cursor: pointer; }
+.ine { width: 150px; aspect-ratio: 85.6/54; border-radius: 6px; border: 1px dashed var(--line); background: var(--surface-2); display: grid; place-items: center; overflow: hidden; position: relative; color: var(--muted); font-size: .78rem; text-align: center; padding: 4px; max-width: 100%; }
+.ine img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.file-hidden { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+/* ---------- Modal ---------- */
+.modal { position: fixed; inset: 0; z-index: 50; background: rgb(8 14 18 / .55); display: grid; align-items: end; justify-items: center; padding-top: max(24px, env(safe-area-inset-top, 0px)); }
+.sheet-m { background: var(--bg); width: min(100%, 720px); max-height: 100%; overflow-y: auto; border-radius: 16px 16px 0 0; padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: max(18px, env(safe-area-inset-right, 0px)); padding-top: 18px; padding-bottom: max(22px, env(safe-area-inset-bottom, 0px)); display: grid; gap: 16px; box-shadow: var(--shadow); }
+@media (min-width: 760px) { .modal { align-items: center; padding: 24px; } .sheet-m { border-radius: 16px; max-height: 92vh; } }
+.m-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.x { border: 1px solid var(--line); background: var(--surface); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1.3rem; line-height: 1; flex: none; }
+.verif { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 520px) { .verif { grid-template-columns: minmax(0, 1fr); justify-items: start; } }
+.ine-big { width: 100%; max-width: 360px; aspect-ratio: 85.6/54; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); background: var(--surface-2); position: relative; display: grid; place-items: center; color: var(--muted); }
+.ine-big img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: var(--surface-2); }
+.choice { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.choice .btn { flex-direction: column; gap: 2px; padding: 14px 10px; }
+.choice .btn small { font-weight: 400; color: inherit; opacity: .8; font-size: .82rem; }
+.choice .btn[aria-pressed="true"] { outline: 3px solid var(--accent); outline-offset: 1px; }
+.nfc-wave { width: 120px; height: 120px; margin: 6px auto; border-radius: 50%; display: grid; place-items: center; background: color-mix(in srgb, var(--accent) 10%, var(--surface)); color: var(--accent); position: relative; }
+.nfc-wave svg { width: 54px; height: 54px; }
+.nfc-wave::after { content: ""; position: absolute; inset: -8px; border-radius: 50%; border: 2px solid color-mix(in srgb, var(--accent) 45%, transparent); animation: pulse 1.6s ease-out infinite; }
+@keyframes pulse { from { transform: scale(.85); opacity: 1; } to { transform: scale(1.25); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .nfc-wave::after { animation: none; } }
+.sim-list { display: grid; gap: 6px; max-height: 260px; overflow-y: auto; }
+.sim-list .btn { justify-content: space-between; font-weight: 400; }
+.sim-list .btn b { font-weight: 700; }
+
+/* ---------- Reportes ---------- */
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+table.tbl { border-collapse: collapse; width: 100%; font-size: .9rem; }
+.tbl th, .tbl td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+.tbl th { background: var(--surface-2); font-size: .78rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-family: var(--f-display); font-stretch: 85%; white-space: nowrap; }
+.tbl td.n { text-align: right; font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tbl tr:last-child td { border-bottom: 0; }
+.tbl tfoot td { font-weight: 700; background: var(--surface-2); }
+.bar { height: 6px; border-radius: 3px; background: var(--surface-2); overflow: hidden; min-width: 60px; }
+.bar i { display: block; height: 100%; background: var(--ok); }
+
+/* ---------- Acceso ---------- */
+.gate { min-height: 100%; display: grid; place-items: center; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 40px; }
+.gate .panel { width: min(100%, 420px); gap: 16px; }
+.err { color: var(--bad); font-size: .9rem; font-weight: 700; }
+
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); z-index: 80; background: var(--ink); color: var(--bg); padding: 11px 18px; border-radius: 10px; font-weight: 700; box-shadow: var(--shadow); max-width: calc(100% - 32px); }
+.toast.bad { background: var(--bad); color: var(--surface); }
+.spin { display: inline-block; width: 16px; height: 16px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: rot .8s linear infinite; vertical-align: -3px; }
+@keyframes rot { to { transform: rotate(360deg); } }
+@media print {
+  .top, .demo-bar, .no-print, .toast { display: none !important; }
+  body { background: #fff; }
+  .cred { box-shadow: none; break-inside: avoid; width: 85.6mm; }
+  .creds { grid-template-columns: repeat(2, 85.6mm); gap: 6mm; }
+}
+</style>
+</head>
+<body>
+
+<div id="app"><div class="gate"><p class="muted"><span class="spin"></span> Cargando…</p></div></div>
+<div id="modal" class="modal" hidden></div>
+<div id="toast" class="toast" hidden></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
+<script>
+/* =============================================================
+   CONFIGURACIÓN
+   Pega aquí los datos de tu proyecto Supabase (Project Settings > API).
+   Si los dejas vacíos, la app los pide en pantalla o arranca en modo demo.
+   ============================================================= */
+const CONFIG = {
+  SUPABASE_URL: "https://tttapzmansjgaojdxeur.supabase.co",
+  SUPABASE_ANON_KEY: "sb_publishable_Bq0uUaukbrWwOwIbkPfzZw_qkRxls_D"
+};
+
+/* ---------- utilidades ---------- */
+const LS = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch { return false; } },
+  del(k) { try { localStorage.removeItem(k); } catch {} }
+};
+const SS = {
+  get(k) { try { return sessionStorage.getItem(k); } catch { return null; } },
+  set(k, v) { try { sessionStorage.setItem(k, v); } catch {} },
+  del(k) { try { sessionStorage.removeItem(k); } catch {} }
+};
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const uuid = () => (crypto.randomUUID ? crypto.randomUUID() : "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c => { const r = Math.random() * 16 | 0; return (c === "x" ? r : (r & 3 | 8)).toString(16); }));
+const token24 = () => Array.from(crypto.getRandomValues(new Uint8Array(12)), b => b.toString(16).padStart(2, "0")).join("");
+const pad = n => String(n).padStart(2, "0");
+const isoDate = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const hoyISO = () => isoDate(new Date());
+const hhmm = d => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+const minutos = t => { if (!t) return 0; const [h, m] = String(t).split(":").map(Number); return h * 60 + (m || 0); };
+const ahoraMin = () => { const d = new Date(); return d.getHours() * 60 + d.getMinutes(); };
+const enTopLevel = (() => { try { return window.self === window.top; } catch { return false; } })();
+const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+const DIAS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+const TIPOS = { alumno: "Alumno", papa: "Papá", mama: "Mamá", extra: "Persona autorizada" };
+const fechaLarga = f => { const d = new Date(f + "T12:00"); return `${DIAS[d.getDay()]} ${d.getDate()} de ${MESES[d.getMonth()]}`; };
+function edad(fn) {
+  if (!fn) return null;
+  const [y, m, d] = fn.split("-").map(Number); const t = new Date();
+  let e = t.getFullYear() - y;
+  if (t.getMonth() + 1 < m || (t.getMonth() + 1 === m && t.getDate() < d)) e--;
+  return e;
+}
+const nombreCompleto = a => `${a.nombre} ${a.apellidos || ""}`.trim();
+const iniciales = n => String(n || "?").split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join("");
+const grupoDe = a => `${a.grado || ""} ${a.grupo || ""}`.trim() || "Sin grupo";
+const tieneAlerta = a => !!(a.alergias || a.medicamentos || a.condiciones_medicas);
+
+const ICON = {
+  nfc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 8.5a5 5 0 0 1 0 7"/><path d="M9.5 6a8.5 8.5 0 0 1 0 12"/><path d="M13 3.5a12 12 0 0 1 0 17"/><circle cx="3" cy="12" r="1" fill="currentColor"/></svg>',
+  plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>'
+};
+
+function toast(msg, tipo = "") {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.className = "toast " + tipo; t.hidden = false;
+  clearTimeout(toast._t); toast._t = setTimeout(() => { t.hidden = true; }, tipo === "bad" ? 5200 : 3000);
+}
+
+async function copiar(texto) {
+  try { await navigator.clipboard.writeText(texto); toast("Copiado"); return; } catch {}
+  const ta = document.createElement("textarea");
+  ta.value = texto; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+  document.body.appendChild(ta); ta.select();
+  let ok = false; try { ok = document.execCommand("copy"); } catch {}
+  ta.remove();
+  toast(ok ? "Copiado" : "No se pudo copiar. Mantén presionado el texto para copiarlo.", ok ? "" : "bad");
+}
+
+function reducirImagen(file, max = 720) {
+  return new Promise((res, rej) => {
+    const img = new Image(); const u = URL.createObjectURL(file);
+    img.onload = () => {
+      const s = Math.min(1, max / Math.max(img.width, img.height));
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(u);
+      c.toBlob(b => b ? res(b) : rej(new Error("No se pudo procesar la imagen")), "image/jpeg", 0.82);
+    };
+    img.onerror = () => { URL.revokeObjectURL(u); rej(new Error("Ese archivo no es una imagen compatible (usa JPG o PNG)")); };
+    img.src = u;
+  });
+}
+const blobToDataURL = b => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => rej(r.error); r.readAsDataURL(b); });
+
+/* =============================================================
+   CAPA DE DATOS: Supabase real o modo demo (en este navegador)
+   ============================================================= */
+function crearSupabase(url, key) {
+  const sb = supabase.createClient(url, key);
+  const cache = new Map();
+  const ok = ({ data, error }) => { if (error) throw new Error(traducirError(error.message)); return data; };
+  const aplicar = (q, f = {}) => {
+    for (const [k, v] of Object.entries(f.eq || {})) q = q.eq(k, v);
+    for (const [k, v] of Object.entries(f.gte || {})) q = q.gte(k, v);
+    for (const [k, v] of Object.entries(f.lte || {})) q = q.lte(k, v);
+    if (f.order) q = q.order(f.order[0], { ascending: !f.order[1] });
+    return q;
+  };
+  return {
+    demo: false, sb,
+    select: async (t, f) => ok(await aplicar(sb.from(t).select("*"), f)),
+    insert: async (t, row) => ok(await sb.from(t).insert(row).select().single()),
+    update: async (t, id, patch) => ok(await sb.from(t).update(patch).eq("id", id).select().single()),
+    upsert: async (t, row, keys) => ok(await sb.from(t).upsert(row, { onConflict: keys.join(",") }).select().single()),
+    remove: async (t, id) => { ok(await sb.from(t).delete().eq("id", id)); },
+    upload: async (path, blob) => { ok(await sb.storage.from("fotos").upload(path, blob, { contentType: "image/jpeg", upsert: true })); cache.delete(path); return path; },
+    url: async path => {
+      if (!path) return null;
+      const c = cache.get(path); if (c && c.exp > Date.now()) return c.u;
+      const { data, error } = await sb.storage.from("fotos").createSignedUrl(path, 3600);
+      if (error) return null;
+      cache.set(path, { u: data.signedUrl, exp: Date.now() + 3500e3 });
+      return data.signedUrl;
+    }
+  };
+}
+function traducirError(m) {
+  if (/row-level security|permission denied/i.test(m)) return "Tu usuario no tiene permiso para esta acción.";
+  if (/motivo_obligatorio/.test(m)) return "Falta escribir el motivo (constancia).";
+  if (/duplicate key.*uid_nfc/i.test(m)) return "Esa tarjeta NFC ya está asignada a otro gafete.";
+  if (/Failed to fetch|NetworkError/i.test(m)) return "Sin conexión a internet. Revisa la red e intenta de nuevo.";
+  if (/Invalid login credentials/i.test(m)) return "Correo o contraseña incorrectos.";
+  return m;
+}
+
+function crearDemo() {
+  let data = LS.get("gafetes.demo.v1", null);
+  if (!data) { data = semillaDemo(); LS.set("gafetes.demo.v1", data); }
+  const guardar = () => { if (!LS.set("gafetes.demo.v1", data)) console.warn("No se pudo guardar el demo en este navegador"); };
+  const coincide = (r, f = {}) =>
+    Object.entries(f.eq || {}).every(([k, v]) => r[k] === v) &&
+    Object.entries(f.gte || {}).every(([k, v]) => r[k] >= v) &&
+    Object.entries(f.lte || {}).every(([k, v]) => r[k] <= v);
+  const base = t => ({ alumnos: { activo: true }, tutores: { activo: true }, gafetes: { activo: true, token: token24(), uid_nfc: null }, movimientos: { fecha_hora: new Date().toISOString() } }[t] || {});
+  return {
+    demo: true,
+    async select(t, f = {}) {
+      const r = (data[t] || []).filter(x => coincide(x, f)).map(x => ({ ...x }));
+      if (f.order) { const [k, desc] = f.order; r.sort((a, b) => (a[k] > b[k] ? 1 : a[k] < b[k] ? -1 : 0) * (desc ? -1 : 1)); }
+      return r;
+    },
+    async insert(t, row) {
+      if (t === "movimientos" && row.condicion !== "normal" && !String(row.motivo || "").trim()) throw new Error("Falta escribir el motivo (constancia).");
+      if (t === "tutores" && data.tutores.some(x => x.alumno_id === row.alumno_id && x.tipo === row.tipo)) throw new Error("Ese tutor ya existe.");
+      const r = { id: uuid(), created_at: new Date().toISOString(), ...base(t), ...row };
+      data[t].push(r); guardar(); return { ...r };
+    },
+    async update(t, id, patch) {
+      const r = data[t].find(x => x.id === id); if (!r) throw new Error("Registro no encontrado");
+      if (t === "gafetes" && patch.uid_nfc && data.gafetes.some(g => g.id !== id && g.uid_nfc === patch.uid_nfc)) throw new Error("Esa tarjeta NFC ya está asignada a otro gafete.");
+      Object.assign(r, patch); guardar(); return { ...r };
+    },
+    async upsert(t, row, keys) {
+      const r = data[t].find(x => keys.every(k => x[k] === row[k]));
+      if (r) { Object.assign(r, row); guardar(); return { ...r }; }
+      return this.insert(t, row);
+    },
+    async remove(t, id) { data[t] = data[t].filter(x => x.id !== id); guardar(); },
+    async upload(path, blob) { return await blobToDataURL(blob); },
+    async url(path) { return path || null; },
+    reiniciar() { data = semillaDemo(); guardar(); }
+  };
+}
+
+function semillaDemo() {
+  let s = 20261103; const rnd = () => { s |= 0; s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+  const hoy = new Date();
+  const inicio = new Date(hoy.getFullYear(), hoy.getMonth() - 1, 1);
+  const creado = inicio.toISOString();
+  const lista = [
+    ["Sofía", "Ramírez Torres", "f", "Jorge", "Patricia"], ["Mateo", "Hernández López", "m", "Luis", "Claudia"],
+    ["Valentina", "Cruz Morales", "f", "Ricardo", "Verónica"], ["Santiago", "Flores Ruiz", "m", "Arturo", "Mónica"],
+    ["Regina", "Castillo Vega", "f", "Fernando", "Adriana"], ["Emiliano", "Ortiz Navarro", "m", "Raúl", "Gabriela"],
+    ["Ximena", "Jiménez Salas", "f", "Héctor", "Lorena"], ["Diego", "Mendoza Rojas", "m", "Sergio", "Alejandra"],
+    ["Camila", "Aguilar Reyes", "f", "Óscar", "Rosa María"], ["Leonardo", "Vargas Peña", "m", "Manuel", "Leticia"],
+    ["Renata", "Domínguez Ríos", "f", "Alberto", "Silvia"], ["Iker", "Guzmán Herrera", "m", "Eduardo", "Karina"]
+  ];
+  const extras = [["Abuela", "Carmen"], ["Tío", "Roberto"], ["Abuelo", "Ernesto"], ["Tía", "Julia"]];
+  const ine = (nombre) => "data:image/svg+xml;charset=utf-8," + encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 428 270"><rect width="428" height="270" rx="16" fill="#e9eef2"/><rect width="428" height="48" fill="#8a2d4a"/><text x="20" y="32" font-family="Arial" font-size="20" font-weight="700" fill="#fff">IDENTIFICACIÓN · EJEMPLO</text><rect x="20" y="70" width="110" height="140" rx="6" fill="#c7d0d8"/><circle cx="75" cy="120" r="26" fill="#9aa8b4"/><rect x="40" y="152" width="70" height="44" rx="20" fill="#9aa8b4"/><text x="150" y="96" font-family="Arial" font-size="13" fill="#56666e">NOMBRE</text><text x="150" y="118" font-family="Arial" font-size="18" font-weight="700" fill="#14202a">${nombre.replace(/&/g, "&amp;")}</text><text x="150" y="150" font-family="Arial" font-size="13" fill="#56666e">DOCUMENTO DE MUESTRA</text><text x="150" y="172" font-family="Arial" font-size="13" fill="#56666e">SIN VALIDEZ OFICIAL</text></svg>`);
+  const alumnos = [], tutores = [], gafetes = [], asistencias = [], movimientos = [];
+  lista.forEach(([nom, ape, sx, papa, mama], i) => {
+    const id = uuid();
+    const [ap1, ap2] = ape.split(" ");
+    alumnos.push({
+      id, nombre: nom, apellidos: ape, grado: "3°", grupo: "B",
+      fecha_nacimiento: `2017-${pad(1 + (i * 5) % 12)}-${pad(3 + (i * 7) % 25)}`,
+      estatura_cm: 118 + Math.round(rnd() * 14), caracteristicas: ["Lentes armazón azul", "Lunar en mejilla derecha", "Cabello rizado", "", "Usa frenos dentales", ""][i % 6],
+      telefono_contacto: `664 ${100 + i * 37} ${pad(10 + i * 3)}${pad(20 + i)}`, contacto_emergencia: `${mama} (mamá)`,
+      alergias: i === 2 ? "Penicilina" : i === 7 ? "Cacahuate (anafilaxia). Trae EpiPen en la mochila." : "",
+      medicamentos: i === 4 ? "Salbutamol inhalado si presenta crisis de asma" : "", condiciones_medicas: i === 4 ? "Asma leve" : "",
+      notas: "", foto_path: null, activo: true, created_at: creado
+    });
+    gafetes.push({ id: uuid(), token: token24(), alumno_id: id, tutor_id: null, tipo: "alumno", uid_nfc: null, activo: true, created_at: creado });
+    const ex = extras[i % 4];
+    [["papa", `${papa} ${ap1}`, "Padre"], ["mama", `${mama} ${ap2}`, "Madre"], ["extra", `${ex[1]} ${i % 2 ? ap1 : ap2}`, ex[0]]].forEach(([tipo, n, par], k) => {
+      const tid = uuid();
+      tutores.push({ id: tid, alumno_id: id, tipo, nombre: n, parentesco: par, telefono: `664 ${200 + i * 11 + k} ${pad(30 + k * 7)}${pad(40 + i)}`, foto_path: null, ine_path: ine(n), activo: true, created_at: creado });
+      gafetes.push({ id: uuid(), token: token24(), alumno_id: id, tutor_id: tid, tipo, uid_nfc: null, activo: true, created_at: creado });
+    });
+  });
+  // asistencia de días hábiles anteriores (mes pasado y este)
+  const d = new Date(inicio);
+  const hoyS = isoDate(hoy);
+  const fechaHora = (f, h, m) => new Date(`${f}T${pad(h)}:${pad(m)}:00`).toISOString();
+  while (isoDate(d) < hoyS) {
+    const w = d.getDay(); const f = isoDate(d);
+    if (w > 0 && w < 6) {
+      alumnos.forEach((a, i) => {
+        const r = rnd();
+        if (r < 0.06) asistencias.push({ id: uuid(), alumno_id: a.id, fecha: f, estado: "F", tarde: false, origen: "manual" });
+        else if (r > 0.3 || i % 3) {
+          const tarde = rnd() < 0.07;
+          asistencias.push({ id: uuid(), alumno_id: a.id, fecha: f, estado: "A", tarde, origen: "gafete" });
+          if (tarde) {
+            const tipoT = rnd() < .5 ? "mama" : "papa"; const tut = tutores.find(t => t.alumno_id === a.id && t.tipo === tipoT);
+            movimientos.push({ id: uuid(), alumno_id: a.id, tutor_id: tut.id, tipo: "entrada", condicion: "tarde", motivo: ["Tráfico en la garita", "Cita médica temprano", "Se quedó dormido", "Falla del carro"][Math.floor(rnd() * 4)], identidad_verificada: true, fecha: f, fecha_hora: fechaHora(f, 8, 15 + Math.floor(rnd() * 30)), dispositivo: "celular" });
+          }
+        }
+      });
+    }
+    d.setDate(d.getDate() + 1);
+  }
+  // hoy: entradas ya ocurridas
+  const ahora = ahoraMin();
+  if (hoy.getDay() > 0 && hoy.getDay() < 6) {
+    alumnos.slice(0, 10).forEach((a, i) => {
+      const m = 7 * 60 + 44 + i * 3 + (i === 9 ? 22 : 0);
+      if (m > ahora) return;
+      const tarde = m > 8 * 60 + 10;
+      const tut = tutores.find(t => t.alumno_id === a.id && t.tipo === ["mama", "papa", "extra"][i % 3]);
+      movimientos.push({ id: uuid(), alumno_id: a.id, tutor_id: tut.id, tipo: "entrada", condicion: tarde ? "tarde" : "normal", motivo: tarde ? "Tráfico en la garita" : null, identidad_verificada: true, fecha: hoyS, fecha_hora: fechaHora(hoyS, Math.floor(m / 60), m % 60), dispositivo: i % 2 ? "puerta-principal" : "celular" });
+      asistencias.push({ id: uuid(), alumno_id: a.id, fecha: hoyS, estado: "A", tarde, origen: "gafete" });
+    });
+    if (ahora > 11 * 60 + 20) {
+      const a = alumnos[7]; const tut = tutores.find(t => t.alumno_id === a.id && t.tipo === "papa");
+      movimientos.push({ id: uuid(), alumno_id: a.id, tutor_id: tut.id, tipo: "salida", condicion: "temprano", motivo: "Cita con el dentista a las 12:00", identidad_verificada: true, fecha: hoyS, fecha_hora: fechaHora(hoyS, 11, 20), dispositivo: "celular" });
+    }
+  }
+  return {
+    config: [{ id: 1, escuela: "Escuela Primaria (ejemplo)", hora_entrada: "08:00", tolerancia_min: 10, hora_limite: "09:00", hora_salida: "13:00", url_publica: "" }],
+    alumnos, tutores, gafetes, asistencias, movimientos
+  };
+}
+
+/* =============================================================
+   ESTADO Y CARGA
+   ============================================================= */
+let DB = null;
+const S = { cfg: null, alumnos: [], tutores: [], gafetes: [], user: null, perfil: null, view: "hoy", fichaId: null, grupo: LS.get("gafetes.grupo", ""), mes: hoyISO().slice(0, 7), rep: null, nfcCtrl: null };
+const VISTAS = ["hoy", "lista", "alumnos", "reportes", "ajustes"];
+
+async function cargarBase() {
+  const [cfg, al, tu, ga] = await Promise.all([
+    DB.select("config", { eq: { id: 1 } }),
+    DB.select("alumnos", { eq: { activo: true }, order: ["apellidos"] }),
+    DB.select("tutores", {}),
+    DB.select("gafetes", {})
+  ]);
+  S.cfg = cfg[0] || { id: 1, escuela: "Mi escuela", hora_entrada: "08:00", tolerancia_min: 10, hora_limite: "09:00", hora_salida: "13:00" };
+  S.alumnos = al; S.tutores = tu; S.gafetes = ga;
+}
+const alumno = id => S.alumnos.find(a => a.id === id);
+const tutor = id => S.tutores.find(t => t.id === id);
+const grupos = () => [...new Set(S.alumnos.map(grupoDe))].sort();
+const alumnosVisibles = () => S.alumnos.filter(a => !S.grupo || grupoDe(a) === S.grupo);
+const esAdmin = () => S.perfil?.rol === "admin";
+
+function urlGafete(token) {
+  let base = (S.cfg?.url_publica || "").trim();
+  if (!base) base = location.origin + location.pathname;
+  return base + (base.includes("?") ? "&" : "?") + "g=" + token;
+}
+
+async function iniciar() {
+  const qs = new URLSearchParams(location.search);
+  const g = qs.get("g");
+  if (g) { SS.set("gafete.pendiente", g); try { history.replaceState(null, "", location.pathname + location.hash); } catch {} }
+
+  const cfgSb = CONFIG.SUPABASE_URL ? { url: CONFIG.SUPABASE_URL, key: CONFIG.SUPABASE_ANON_KEY } : LS.get("gafetes.sb", null);
+  if (cfgSb && window.supabase) {
+    DB = crearSupabase(cfgSb.url, cfgSb.key);
+    let sesion = null;
+    try { sesion = (await DB.sb.auth.getSession()).data.session; } catch (e) { console.error(e); }
+    if (!sesion) return pantallaLogin();
+    return entrar(sesion.user);
+  }
+  if (cfgSb && !window.supabase) {
+    document.getElementById("app").innerHTML = `<div class="gate"><div class="panel"><h2>No se pudo cargar Supabase</h2><p class="muted">Revisa tu conexión a internet y recarga la página.</p></div></div>`;
+    return;
+  }
+  DB = crearDemo();
+  S.user = { email: "demo" }; S.perfil = { rol: "admin", nombre: "Docente de ejemplo" };
+  await cargarBase();
+  arrancarApp();
+}
+
+async function entrar(user) {
+  S.user = user;
+  let perf = [];
+  try { perf = await DB.select("perfiles", { eq: { id: user.id } }); } catch (e) { console.error(e); }
+  S.perfil = perf[0];
+  if (!S.perfil || !S.perfil.activo) {
+    document.getElementById("app").innerHTML = `<div class="gate"><div class="panel"><h2>Usuario sin acceso</h2><p class="muted">${esc(user.email)} todavía no está dado de alta como personal de la escuela. Pide a la dirección que active tu perfil.</p><button class="btn" data-act="salir">Cerrar sesión</button></div></div>`;
+    return;
+  }
+  await cargarBase();
+  arrancarApp();
+}
+
+function arrancarApp() {
+  const h = location.hash.slice(1);
+  S.view = VISTAS.includes(h) ? h : "hoy";
+  render();
+  const pend = SS.get("gafete.pendiente");
+  if (pend) { SS.del("gafete.pendiente"); abrirGafete(pend); }
+}
+
+window.addEventListener("hashchange", () => {
+  const h = location.hash.slice(1);
+  if (VISTAS.includes(h) && DB && S.cfg) { S.view = h; S.fichaId = null; render(); window.scrollTo(0, 0); }
+});
+
+/* =============================================================
+   PANTALLAS DE ACCESO
+   ============================================================= */
+function pantallaLogin(error = "") {
+  document.getElementById("app").innerHTML = `
+  <div class="gate"><form class="panel" data-form="login" autocomplete="on">
+    <div class="brand"><span class="brand-mark" aria-hidden="true"></span><div><b>Gafetes Escolares</b><small>Acceso del personal</small></div></div>
+    ${SS.get("gafete.pendiente") ? `<p class="alert" style="border-color:var(--line);background:var(--surface-2)">Se leyó un gafete. Inicia sesión para ver a quién pertenece.</p>` : ""}
+    <label class="field"><span>Correo</span><input id="lg-email" name="email" type="email" required autocomplete="username"></label>
+    <label class="field"><span>Contraseña</span><input id="lg-pass" name="pass" type="password" required autocomplete="current-password"></label>
+    ${error ? `<p class="err">${esc(error)}</p>` : ""}
+    <button class="btn pri big" type="submit">Entrar</button>
+    ${CONFIG.SUPABASE_URL ? "" : `<button class="link" type="button" data-act="olvidar-conexion">Cambiar de proyecto Supabase</button>`}
+  </form></div>`;
+}
+
+/* =============================================================
+   RENDER PRINCIPAL
+   ============================================================= */
+async function render() {
+  const app = document.getElementById("app");
+  let cuerpo = "";
+  try {
+    cuerpo = S.view === "ficha" ? await vistaFicha() :
+      S.view === "lista" ? await vistaLista() :
+      S.view === "alumnos" ? vistaAlumnos() :
+      S.view === "reportes" ? await vistaReportes() :
+      S.view === "ajustes" ? vistaAjustes() : await vistaHoy();
+  } catch (e) {
+    console.error(e);
+    cuerpo = `<div class="panel"><h2>No se pudieron cargar los datos</h2><p class="err">${esc(traducirError(e.message))}</p><div><button class="btn" data-act="recargar">Intentar de nuevo</button></div></div>`;
+  }
+  const actual = S.view === "ficha" ? "alumnos" : S.view;
+  const tab = (v, t) => `<button class="tab" data-act="ir" data-v="${v}" ${actual === v ? 'aria-current="page"' : ""}>${t}</button>`;
+  app.innerHTML = `
+  <header class="top"><div class="top-in">
+    <div class="brand-row">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"></span><div style="min-width:0"><b>Gafetes Escolares</b><small>${esc(S.cfg.escuela)}</small></div></div>
+      <button class="btn pri" data-act="leer">${ICON.nfc} Leer gafete</button>
+    </div>
+    <nav class="tabs" aria-label="Secciones">${tab("hoy", "Hoy")}${tab("lista", "Lista de asistencia")}${tab("alumnos", "Alumnos")}${tab("reportes", "Reportes")}${tab("ajustes", "Ajustes")}</nav>
+  </div></header>
+  ${DB.demo ? `<div class="demo-bar"><div><b>Modo demo</b><span>Los alumnos y tutores son de ejemplo y solo se guardan en este navegador.</span><button class="link" data-act="ir" data-v="ajustes">Conectar Supabase</button></div></div>` : ""}
+  <main>${cuerpo}</main>`;
+  hidratarFotos(app);
+}
+
+function foto(path, nombre, cls = "") {
+  return `<span class="av ${cls}" aria-hidden="true">${esc(iniciales(nombre))}${path ? `<img data-foto="${esc(path)}" alt="" hidden>` : ""}</span>`;
+}
+function hidratarFotos(root) {
+  root.querySelectorAll("img[data-foto]").forEach(async img => {
+    const u = await DB.url(img.dataset.foto);
+    if (u) { img.onload = () => { img.hidden = false; }; img.src = u; }
+  });
+}
+
+/* ---------- Estado de un alumno en un día ---------- */
+const diaCerrado = f => { const h = hoyISO(); return f < h || (f === h && ahoraMin() > minutos(S.cfg.hora_limite)); };
+function estadoHoy(a, asis, movs) {
+  const sal = movs.filter(m => m.alumno_id === a.id && m.tipo === "salida").pop();
+  const ent = movs.filter(m => m.alumno_id === a.id && m.tipo === "entrada")[0];
+  const as = asis.find(x => x.alumno_id === a.id);
+  if (sal) return { k: sal.condicion === "temprano" ? "temprano" : "salio", t: `Salió ${hhmm(new Date(sal.fecha_hora))}`, ent, sal };
+  if (as?.estado === "A") return { k: as.tarde ? "tarde" : "presente", t: as.tarde ? "Retardo" : "Presente", ent, sal };
+  if (as?.estado === "F") return { k: "falta", t: "Falta", ent, sal };
+  return diaCerrado(hoyISO()) ? { k: "falta", t: "Falta", ent, sal } : { k: "pendiente", t: "Sin llegar", ent, sal };
+}
+
+/* =============================================================
+   VISTA: HOY
+   ============================================================= */
+async function vistaHoy() {
+  const f = hoyISO();
+  const [asis, movs] = await Promise.all([
+    DB.select("asistencias", { eq: { fecha: f } }),
+    DB.select("movimientos", { eq: { fecha: f }, order: ["fecha_hora", false] })
+  ]);
+  const al = alumnosVisibles();
+  const ids = new Set(al.map(a => a.id));
+  const est = al.map(a => ({ a, e: estadoHoy(a, asis, movs) }));
+  const presentes = est.filter(x => ["presente", "tarde", "salio", "temprano"].includes(x.e.k)).length;
+  const tardes = est.filter(x => asis.find(s => s.alumno_id === x.a.id && s.tarde)).length;
+  const faltan = est.filter(x => x.e.k === "falta" || x.e.k === "pendiente").length;
+  const salieron = est.filter(x => x.e.k === "salio" || x.e.k === "temprano").length;
+  const cerrado = diaCerrado(f);
+  const d = new Date(); const finde = d.getDay() === 0 || d.getDay() === 6;
+  const mv = movs.filter(m => ids.has(m.alumno_id)).slice().reverse();
+
+  return `
+  <section class="head">
+    <div><span class="eyebrow">${esc(S.grupo || "Todos los grupos")}</span><h1>Hoy, ${esc(fechaLarga(f))}</h1>
+    <p class="muted">Entrada ${esc(String(S.cfg.hora_entrada).slice(0, 5))} con ${esc(S.cfg.tolerancia_min)} min de tolerancia · Sin registro después de las ${esc(String(S.cfg.hora_limite).slice(0, 5))} cuenta como falta · Salida ${esc(String(S.cfg.hora_salida).slice(0, 5))}</p></div>
+    ${selGrupo()}
+  </section>
+  ${finde ? `<p class="alert" style="border-color:var(--line);background:var(--surface-2)">Hoy es fin de semana: no cuenta en la lista de asistencia.</p>` : ""}
+  <section class="tally" aria-label="Resumen del día">
+    <div><span class="k"><i class="dot" style="background:var(--ok)"></i>Presentes</span><span class="num">${presentes}<small> / ${al.length}</small></span></div>
+    <div><span class="k"><i class="dot" style="background:var(--warn)"></i>Retardos</span><span class="num">${tardes}</span></div>
+    <div><span class="k"><i class="dot" style="background:var(--bad)"></i>${cerrado ? "Faltas" : "Sin llegar"}</span><span class="num">${faltan}</span></div>
+    <div><span class="k"><i class="dot" style="background:var(--info)"></i>Ya salieron</span><span class="num">${salieron}</span></div>
+  </section>
+  <div class="cols">
+    <section class="panel">
+      <div class="panel-h"><h2>Alumnos</h2><span class="muted" style="font-size:.86rem">Toca un nombre para ver su ficha</span></div>
+      <div class="people">${est.length ? est.map(({ a, e }) => `
+        <button class="person" data-act="ficha" data-id="${a.id}">
+          ${foto(a.foto_path, nombreCompleto(a))}
+          <span class="who"><b>${esc(nombreCompleto(a))}${tieneAlerta(a) ? '<span class="flag">MÉDICO</span>' : ""}</b>
+          <span>${e.ent ? `Entró ${hhmm(new Date(e.ent.fecha_hora))}${e.ent.tutor_id && tutor(e.ent.tutor_id) ? " · " + esc(TIPOS[tutor(e.ent.tutor_id).tipo]) : ""}` : esc(grupoDe(a))}</span></span>
+          <span class="pill s-${e.k}">${esc(e.t)}</span>
+        </button>`).join("") : `<div class="empty">No hay alumnos dados de alta. <button class="link" data-act="nuevo-alumno">Agregar el primero</button></div>`}
+      </div>
+    </section>
+    <section class="panel">
+      <div class="panel-h"><h2>Entradas y salidas</h2><span class="muted num" style="font-size:.86rem">${mv.length} registros</span></div>
+      ${mv.length ? `<div class="log">${mv.map(itemBitacora).join("")}</div>` : `<div class="empty">Todavía no hay registros hoy. Al leer un gafete aparecerá aquí.</div>`}
+    </section>
+  </div>`;
+}
+
+function itemBitacora(m) {
+  const a = alumno(m.alumno_id); const t = m.tutor_id ? tutor(m.tutor_id) : null;
+  const nom = a ? nombreCompleto(a) : "Alumno dado de baja";
+  const quien = t ? `${m.tipo === "entrada" ? "Lo dejó" : "Lo recogió"}: ${t.nombre} (${TIPOS[t.tipo]})` : (m.tipo === "entrada" ? "Llegó con su gafete" : "Salida");
+  const cond = m.condicion === "tarde" ? `<span class="pill s-tarde">Retardo</span>` : m.condicion === "temprano" ? `<span class="pill s-temprano">Salida temprana</span>` : "";
+  return `<div class="log-i"><span class="num">${hhmm(new Date(m.fecha_hora))}</span><div class="what">
+    <div class="row" style="gap:6px 8px"><b>${m.tipo === "entrada" ? "Entrada" : "Salida"} · ${esc(nom)}</b>${cond}</div>
+    <span>${esc(quien)}${m.identidad_verificada ? " · identidad cotejada" : ""}${m.dispositivo && m.dispositivo !== "celular" ? " · " + esc(m.dispositivo) : ""}</span>
+    ${m.motivo ? `<p class="motivo">${esc(m.motivo)}</p>` : ""}</div></div>`;
+}
+
+function selGrupo() {
+  const gs = grupos();
+  if (gs.length < 2) return "";
+  return `<label class="field" style="min-width:160px"><span>Grupo</span><select id="grupo-sel" data-cambio="grupo"><option value="">Todos</option>${gs.map(g => `<option ${g === S.grupo ? "selected" : ""}>${esc(g)}</option>`).join("")}</select></label>`;
+}
+
+/* =============================================================
+   VISTA: LISTA DE ASISTENCIA (• asistencia, / falta)
+   ============================================================= */
+function diasHabiles(desde, hasta) {
+  const out = []; const d = new Date(desde + "T12:00"); const fin = new Date(hasta + "T12:00");
+  while (d <= fin) { const w = d.getDay(); if (w > 0 && w < 6) out.push(isoDate(d)); d.setDate(d.getDate() + 1); }
+  return out;
+}
+function rangoMes(mes) {
+  const [y, m] = mes.split("-").map(Number);
+  return [`${mes}-01`, isoDate(new Date(y, m, 0))];
+}
+function marca(a, f, mapa) {
+  if (f < String(a.created_at || "").slice(0, 10)) return "x";
+  const r = mapa.get(a.id + "|" + f);
+  if (r) return r.estado === "A" ? (r.tarde ? "T" : "A") : "F";
+  return diaCerrado(f) ? "f" : "";
+}
+const SIMBOLO = { A: "•", T: "•", F: "/", f: "/", "": "", x: "·" };
+
+async function vistaLista() {
+  const [desde, hasta] = rangoMes(S.mes);
+  const dias = diasHabiles(desde, hasta);
+  const asis = await DB.select("asistencias", { gte: { fecha: desde }, lte: { fecha: hasta } });
+  const mapa = new Map(asis.map(r => [r.alumno_id + "|" + r.fecha, r]));
+  const al = alumnosVisibles();
+  const hoy = hoyISO();
+  const [y, m] = S.mes.split("-").map(Number);
+  const filas = al.map(a => {
+    let A = 0, F = 0;
+    const celdas = dias.map(f => {
+      const k = marca(a, f, mapa);
+      if (k === "A" || k === "T") A++; if (k === "F" || k === "f") F++;
+      const tit = { A: "Asistencia", T: "Asistencia con retardo", F: "Falta", f: "Falta (sin registro)", "": "Sin registro", x: "Aún no estaba inscrito" }[k];
+      return `<td class="${f === hoy ? "today" : ""}"><button class="cell ${k}" ${k === "x" ? "disabled" : `data-act="celda" data-id="${a.id}" data-f="${f}"`} title="${fechaLarga(f)}: ${tit}" aria-label="${esc(nombreCompleto(a))}, ${fechaLarga(f)}: ${tit}">${SIMBOLO[k]}</button></td>`;
+    }).join("");
+    return `<tr><th class="name" scope="row" title="${esc(nombreCompleto(a))}">${esc(a.apellidos)} ${esc(a.nombre)}</th>${celdas}<td class="tot">${A} • &nbsp;${F} /</td></tr>`;
+  }).join("");
+  return `
+  <section class="head">
+    <div><span class="eyebrow">${esc(S.grupo || "Todos los grupos")}</span><h1>Lista de ${MESES[m - 1]} ${y}</h1>
+    <p class="muted">Toca una casilla para corregirla: • asistencia → / falta → sin registro.</p></div>
+    <div class="row">
+      <label class="field"><span>Mes</span><input type="month" id="mes-sel" data-cambio="mes" value="${S.mes}"></label>
+      ${selGrupo()}
+    </div>
+  </section>
+  ${al.length ? `<div class="sheet-wrap"><table class="sheet"><thead><tr><th class="name">Alumno</th>${dias.map(f => { const d = new Date(f + "T12:00"); return `<th class="${f === hoy ? "today" : ""}">${"DLMMJVS"[d.getDay()]}<span class="num">${d.getDate()}</span></th>`; }).join("")}<th>Total</th></tr></thead><tbody>${filas}</tbody></table></div>` : `<div class="empty">No hay alumnos en este grupo.</div>`}
+  <div class="legend"><span><b style="color:var(--ink)">•</b>Asistencia</span><span><b style="color:var(--warn)">•</b>Asistencia con retardo</span><span><b style="color:var(--bad)">/</b>Falta</span><span><b class="cell f" style="width:auto;height:auto">/</b>Falta automática: no llegó antes de las ${esc(String(S.cfg.hora_limite).slice(0, 5))}</span></div>`;
+}
+
+async function toggleCelda(el) {
+  const alId = el.dataset.id, f = el.dataset.f;
+  const ex = (await DB.select("asistencias", { eq: { alumno_id: alId, fecha: f } }))[0];
+  if (!ex) await DB.upsert("asistencias", { alumno_id: alId, fecha: f, estado: "A", tarde: false, origen: "manual", updated_at: new Date().toISOString() }, ["alumno_id", "fecha"]);
+  else if (ex.estado === "A") await DB.update("asistencias", ex.id, { estado: "F", tarde: false, origen: "manual", updated_at: new Date().toISOString() });
+  else await DB.remove("asistencias", ex.id);
+  const y = window.scrollY; const wrap = document.querySelector(".sheet-wrap"); const sx = wrap ? wrap.scrollLeft : 0;
+  await render();
+  window.scrollTo(0, y); const w2 = document.querySelector(".sheet-wrap"); if (w2) w2.scrollLeft = sx;
+}
+
+/* =============================================================
+   VISTA: ALUMNOS
+   ============================================================= */
+function vistaAlumnos() {
+  const al = alumnosVisibles();
+  return `
+  <section class="head">
+    <div><span class="eyebrow">${al.length} alumnos</span><h1>Alumnos</h1><p class="muted">Cada alumno tiene 4 gafetes: el suyo, papá, mamá y una persona autorizada.</p></div>
+    <div class="row">${selGrupo()}<button class="btn pri" data-act="nuevo-alumno">${ICON.plus} Agregar alumno</button></div>
+  </section>
+  <label class="field" style="max-width:360px"><span>Buscar</span><input id="buscar" class="inp" type="search" placeholder="Nombre o apellido" data-cambio="buscar"></label>
+  <div class="cards" id="cards">${al.map(a => `
+    <button class="card" data-act="ficha" data-id="${a.id}" data-busca="${esc((nombreCompleto(a)).toLowerCase())}">
+      ${foto(a.foto_path, nombreCompleto(a))}
+      <span class="who"><b>${esc(nombreCompleto(a))}</b><span>${esc(grupoDe(a))}${edad(a.fecha_nacimiento) != null ? " · " + edad(a.fecha_nacimiento) + " años" : ""}${tieneAlerta(a) ? ' <span class="flag">MÉDICO</span>' : ""}</span></span>
+    </button>`).join("") || `<div class="empty">Todavía no hay alumnos. Agrega el primero con el botón de arriba.</div>`}</div>`;
+}
+
+/* =============================================================
+   VISTA: FICHA DEL ALUMNO
+   ============================================================= */
+function campo(name, label, val, type = "text", extra = "") {
+  return `<label class="field ${type === "textarea" ? "wide" : ""}"><span>${label}</span>${type === "textarea"
+    ? `<textarea id="f-${name}" name="${name}" ${extra}>${esc(val)}</textarea>`
+    : `<input id="f-${name}" name="${name}" type="${type}" value="${esc(val)}" ${extra}>`}</label>`;
+}
+
+async function vistaFicha() {
+  const nuevo = S.fichaId === "nuevo";
+  const a = nuevo ? { nombre: "", apellidos: "", grado: S.grupo ? S.grupo.split(" ")[0] : "", grupo: S.grupo ? S.grupo.split(" ").slice(1).join(" ") : "" } : alumno(S.fichaId);
+  if (!a) return `<div class="empty">No se encontró el alumno. <button class="link" data-act="ir" data-v="alumnos">Volver a la lista</button></div>`;
+  const tus = nuevo ? [] : S.tutores.filter(t => t.alumno_id === a.id);
+  const gafs = nuevo ? [] : S.gafetes.filter(g => g.alumno_id === a.id && g.activo);
+  const e = edad(a.fecha_nacimiento);
+  const datosForm = `
+  <form class="panel" data-form="alumno">
+    <div class="panel-h"><h2>${nuevo ? "Nuevo alumno" : "Datos del alumno"}</h2></div>
+    <div class="grid-f">
+      ${campo("nombre", "Nombre(s)", a.nombre, "text", "required")}
+      ${campo("apellidos", "Apellidos", a.apellidos, "text", "required")}
+      ${campo("grado", "Grado", a.grado, "text", 'placeholder="3°"')}
+      ${campo("grupo", "Grupo", a.grupo, "text", 'placeholder="B"')}
+      ${campo("fecha_nacimiento", "Fecha de nacimiento", a.fecha_nacimiento || "", "date")}
+      ${campo("estatura_cm", "Estatura (cm)", a.estatura_cm ?? "", "number", 'step="0.5" min="50" max="220" inputmode="decimal"')}
+      ${campo("caracteristicas", "Características particulares (señas)", a.caracteristicas || "", "textarea", 'placeholder="Lentes, lunares, cicatrices, color de cabello…"')}
+    </div>
+    <h3>Contacto</h3>
+    <div class="grid-f">
+      ${campo("telefono_contacto", "Teléfono de casa", a.telefono_contacto || "", "tel")}
+      ${campo("contacto_emergencia", "Contacto de emergencia", a.contacto_emergencia || "", "text", 'placeholder="Nombre y teléfono"')}
+    </div>
+    <h3>Datos médicos importantes</h3>
+    <div class="grid-f">
+      ${campo("alergias", "Alergias", a.alergias || "", "textarea", 'placeholder="Medicamentos, alimentos, picaduras… Escribe ninguna si no tiene"')}
+      ${campo("medicamentos", "Medicamentos que toma", a.medicamentos || "", "textarea", 'placeholder="Nombre, dosis y horario"')}
+      ${campo("condiciones_medicas", "Condiciones médicas", a.condiciones_medicas || "", "textarea", 'placeholder="Asma, diabetes, epilepsia…"')}
+      ${campo("notas", "Notas para el personal", a.notas || "", "textarea")}
+    </div>
+    <div class="row"><button class="btn pri" type="submit">${nuevo ? "Guardar y crear gafete" : "Guardar cambios"}</button>
+    ${nuevo ? `<button class="btn" type="button" data-act="ir" data-v="alumnos">Cancelar</button>` : ""}</div>
+  </form>`;
+  if (nuevo) return `<section class="head"><div><button class="link" data-act="ir" data-v="alumnos">← Alumnos</button><h1>Agregar alumno</h1></div></section>${datosForm}`;
+
+  const alertas = tieneAlerta(a) ? `<div class="alert"><b>Atención médica</b>
+    ${a.alergias ? `<span><strong>Alergias:</strong> ${esc(a.alergias)}</span>` : ""}
+    ${a.medicamentos ? `<span><strong>Medicamentos:</strong> ${esc(a.medicamentos)}</span>` : ""}
+    ${a.condiciones_medicas ? `<span><strong>Condición:</strong> ${esc(a.condiciones_medicas)}</span>` : ""}</div>` : "";
+
+  const tutorForm = tipo => {
+    const t = tus.find(x => x.tipo === tipo) || { tipo };
+    return `<form class="tutor-f ${tipo}" data-form="tutor" data-tipo="${tipo}" data-id="${t.id || ""}">
+      <div class="panel-h"><h3>${TIPOS[tipo]}</h3>${t.id ? "" : '<span class="muted" style="font-size:.85rem">Sin registrar</span>'}</div>
+      <div class="grid-f">
+        <label class="field"><span>Nombre completo</span><input id="t-${tipo}-nombre" name="nombre" value="${esc(t.nombre)}" required></label>
+        <label class="field"><span>Parentesco</span><input id="t-${tipo}-par" name="parentesco" value="${esc(t.parentesco || (tipo === "papa" ? "Padre" : tipo === "mama" ? "Madre" : ""))}" placeholder="Abuela, tío, vecino…"></label>
+        <label class="field"><span>Teléfono</span><input id="t-${tipo}-tel" name="telefono" type="tel" value="${esc(t.telefono)}"></label>
+      </div>
+      <div class="uploads">
+        <div class="upl"><span class="eyebrow">Foto de la cara</span>${foto(t.foto_path, t.nombre || TIPOS[tipo], "lg")}
+          <label class="btn sm">${t.foto_path ? "Cambiar foto" : "Subir foto"}<input class="file-hidden" id="t-${tipo}-foto" type="file" accept="image/*" data-cambio="subir" data-kind="tutor-foto" data-tipo="${tipo}"></label></div>
+        <div class="upl"><span class="eyebrow">INE / identificación</span><span class="ine">${t.ine_path ? `<img data-foto="${esc(t.ine_path)}" alt="INE de ${esc(t.nombre)}" hidden>` : ""}Sin INE</span>
+          <label class="btn sm">${t.ine_path ? "Cambiar INE" : "Subir INE"}<input class="file-hidden" id="t-${tipo}-ine" type="file" accept="image/*" data-cambio="subir" data-kind="tutor-ine" data-tipo="${tipo}"></label></div>
+      </div>
+      <div class="row"><button class="btn" type="submit">${t.id ? "Guardar" : "Registrar y crear gafete"}</button></div>
+    </form>`;
+  };
+
+  return `
+  <section class="head"><div><button class="link" data-act="ir" data-v="alumnos">← Alumnos</button></div></section>
+  <section class="panel">
+    <div class="ficha-top">
+      <div class="upl">${foto(a.foto_path, nombreCompleto(a), "xl")}
+        <label class="btn sm">${a.foto_path ? "Cambiar foto" : "Subir foto"}<input class="file-hidden" id="a-foto" type="file" accept="image/*" data-cambio="subir" data-kind="alumno"></label></div>
+      <div class="meta">
+        <span class="eyebrow">${esc(grupoDe(a))}</span>
+        <h1>${esc(nombreCompleto(a))}</h1>
+        <div class="facts">${e != null ? `<span>Edad <b>${e}</b> años</span>` : ""}${a.estatura_cm ? `<span>Estatura <b>${esc(a.estatura_cm)}</b> cm</span>` : ""}${a.telefono_contacto ? `<span>Tel. <b>${esc(a.telefono_contacto)}</b></span>` : ""}</div>
+        ${a.caracteristicas ? `<p><span class="muted">Señas:</span> ${esc(a.caracteristicas)}</p>` : ""}
+        ${alertas}
+      </div>
+    </div>
+  </section>
+  <section class="panel">
+    <div class="panel-h"><h2>Gafetes</h2><span class="muted" style="font-size:.86rem">El chip solo guarda el enlace con un código; los datos se quedan en el sistema.</span></div>
+    <div class="creds">${["alumno", "papa", "mama", "extra"].map(tipo => {
+      const g = gafs.find(x => x.tipo === tipo);
+      const t = tipo === "alumno" ? null : tus.find(x => x.tipo === tipo);
+      return credencial(a, t, g, tipo);
+    }).join("")}</div>
+  </section>
+  ${datosForm}
+  <section class="panel">
+    <div class="panel-h"><h2>Personas autorizadas para dejar y recoger</h2></div>
+    <div class="tutor-forms">${["papa", "mama", "extra"].map(tutorForm).join("")}</div>
+  </section>
+  ${esAdmin() ? `<section class="row"><button class="btn danger" data-act="baja" data-id="${a.id}">Dar de baja al alumno</button><span class="muted" style="font-size:.86rem">Sus gafetes dejan de funcionar; el historial se conserva.</span></section>` : ""}`;
+}
+
+function credencial(a, t, g, tipo) {
+  const persona = tipo === "alumno" ? nombreCompleto(a) : (t?.nombre || "");
+  const fotoPath = tipo === "alumno" ? a.foto_path : t?.foto_path;
+  const e = edad(a.fecha_nacimiento);
+  const sub = tipo === "alumno"
+    ? `<span>${esc(grupoDe(a))}${e != null ? ` · ${e} años` : ""}</span>`
+    : `<span>Autorizado para dejar y recoger a</span><span><strong>${esc(nombreCompleto(a))}</strong></span>`;
+  const card = `<div class="cred ${tipo} ${g ? "" : "off"}">
+    <div class="cred-band"><span>${TIPOS[tipo]}</span>${ICON.nfc}</div>
+    <div class="cred-body">${foto(fotoPath, persona || TIPOS[tipo])}<div class="cred-txt"><b>${esc(persona || "Sin registrar")}</b>${sub}</div></div>
+    <div class="cred-foot"><span>${esc(S.cfg.escuela)}</span><span class="mono">${g ? "…" + g.token.slice(-6).toUpperCase() : "sin gafete"}</span></div>
+  </div>`;
+  if (!g) return `<div class="cred-box">${card}<p class="muted" style="font-size:.85rem">${tipo === "alumno" ? "Guarda los datos del alumno para crear su gafete." : "Registra a esta persona abajo para crear su gafete."}</p></div>`;
+  const nfcOk = "NDEFReader" in window;
+  return `<div class="cred-box">${card}
+    <div class="row" style="gap:6px">
+      ${nfcOk ? `<button class="btn sm pri" data-act="grabar" data-id="${g.id}">${ICON.nfc} Grabar en tarjeta</button>` : ""}
+      <button class="btn sm" data-act="copiar-enlace" data-id="${g.id}">${ICON.copy} Copiar enlace</button>
+      <button class="btn sm" data-act="simular" data-token="${g.token}">Probar lectura</button>
+      <button class="btn sm danger" data-act="reponer" data-id="${g.id}">Reponer</button>
+    </div>
+    <span class="muted" style="font-size:.8rem">${g.uid_nfc ? `Chip <span class="mono">${esc(g.uid_nfc)}</span>` : "Sin tarjeta grabada todavía"}</span>
+  </div>`;
+}
+
+/* =============================================================
+   VISTA: REPORTES
+   ============================================================= */
+async function vistaReportes() {
+  const [d0, d1] = rangoMes(S.mes);
+  const hoy = hoyISO();
+  S.rep = S.rep || { desde: d0, hasta: hoy < d1 ? hoy : d1, soloConstancias: true };
+  const { desde, hasta } = S.rep;
+  const dias = diasHabiles(desde, hasta).filter(f => f <= hoy);
+  const [asis, movs] = await Promise.all([
+    DB.select("asistencias", { gte: { fecha: desde }, lte: { fecha: hasta } }),
+    DB.select("movimientos", { gte: { fecha: desde }, lte: { fecha: hasta }, order: ["fecha_hora", false] })
+  ]);
+  const mapa = new Map(asis.map(r => [r.alumno_id + "|" + r.fecha, r]));
+  const al = alumnosVisibles(); const ids = new Set(al.map(a => a.id));
+  const porAlumno = al.map(a => {
+    let hab = 0, A = 0, T = 0, F = 0;
+    dias.forEach(f => { const k = marca(a, f, mapa); if (k === "x" || k === "") return; hab++; if (k === "A") A++; if (k === "T") { A++; T++; } if (k === "F" || k === "f") F++; });
+    const temp = movs.filter(m => m.alumno_id === a.id && m.condicion === "temprano").length;
+    return { a, hab, A, T, F, temp, pct: hab ? Math.round(A / hab * 100) : 0 };
+  });
+  const porDia = dias.map(f => {
+    let A = 0, F = 0, T = 0;
+    al.forEach(a => { const k = marca(a, f, mapa); if (k === "A") A++; if (k === "T") { A++; T++; } if (k === "F" || k === "f") F++; });
+    return { f, A, F, T };
+  }).reverse();
+  const consts = movs.filter(m => ids.has(m.alumno_id) && (!S.rep.soloConstancias || m.condicion !== "normal")).reverse();
+  const tot = porAlumno.reduce((s, r) => ({ hab: s.hab + r.hab, A: s.A + r.A, T: s.T + r.T, F: s.F + r.F, temp: s.temp + r.temp }), { hab: 0, A: 0, T: 0, F: 0, temp: 0 });
+  S._tablas = {
+    alumnos: [["Alumno", "Grupo", "Días hábiles", "Asistencias", "Retardos", "Faltas", "% asistencia", "Salidas tempranas"], ...porAlumno.map(r => [nombreCompleto(r.a), grupoDe(r.a), r.hab, r.A, r.T, r.F, r.pct + "%", r.temp])],
+    dias: [["Fecha", "Presentes", "Retardos", "Faltas", "Inscritos"], ...porDia.map(r => [r.f, r.A, r.T, r.F, r.A + r.F])],
+    constancias: [["Fecha", "Hora", "Alumno", "Movimiento", "Condición", "Motivo", "Tutor", "Identidad cotejada"], ...consts.map(m => { const a = alumno(m.alumno_id); const t = tutor(m.tutor_id); const d = new Date(m.fecha_hora); return [m.fecha, hhmm(d), a ? nombreCompleto(a) : "", m.tipo, m.condicion, m.motivo || "", t ? `${t.nombre} (${TIPOS[t.tipo]})` : "", m.identidad_verificada ? "Sí" : "No"]; })]
+  };
+  const acciones = k => `<div class="row" style="gap:6px"><button class="btn sm" data-act="copiar-tabla" data-t="${k}">${ICON.copy} Copiar para Excel</button>${enTopLevel ? `<button class="btn sm" data-act="csv" data-t="${k}">Descargar CSV</button>` : ""}</div>`;
+  const hoyRow = porDia.find(r => r.f === hoy);
+  return `
+  <section class="head">
+    <div><span class="eyebrow">${esc(S.grupo || "Todos los grupos")}</span><h1>Reportes</h1><p class="muted">Para entregar a inspección o dirección. "Copiar para Excel" pega la tabla tal cual en una hoja de cálculo.</p></div>
+  </section>
+  <form class="panel" data-form="rango">
+    <div class="row" style="align-items:end">
+      <label class="field"><span>Desde</span><input id="r-desde" name="desde" type="date" value="${desde}" required></label>
+      <label class="field"><span>Hasta</span><input id="r-hasta" name="hasta" type="date" value="${hasta}" required></label>
+      ${selGrupo()}
+      <button class="btn pri" type="submit">Actualizar</button>
+    </div>
+    <p class="muted">${dias.length} días hábiles · ${al.length} alumnos · asistencia promedio <b class="num" style="color:var(--ink)">${tot.hab ? Math.round(tot.A / tot.hab * 100) : 0}%</b>${hoyRow ? ` · hoy vinieron <b class="num" style="color:var(--ink)">${hoyRow.A}</b> de ${al.length}` : ""}</p>
+  </form>
+  <section class="panel">
+    <div class="panel-h"><h2>Asistencia por alumno</h2>${acciones("alumnos")}</div>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Alumno</th><th>Días</th><th>Asist.</th><th>Retardos</th><th>Faltas</th><th>%</th><th></th><th>Sal. temprana</th></tr></thead>
+    <tbody>${porAlumno.map(r => `<tr><td>${esc(nombreCompleto(r.a))}</td><td class="n">${r.hab}</td><td class="n">${r.A}</td><td class="n">${r.T}</td><td class="n">${r.F}</td><td class="n">${r.pct}%</td><td><div class="bar"><i style="width:${r.pct}%"></i></div></td><td class="n">${r.temp}</td></tr>`).join("")}</tbody>
+    <tfoot><tr><td>Total</td><td class="n">${tot.hab}</td><td class="n">${tot.A}</td><td class="n">${tot.T}</td><td class="n">${tot.F}</td><td class="n">${tot.hab ? Math.round(tot.A / tot.hab * 100) : 0}%</td><td></td><td class="n">${tot.temp}</td></tr></tfoot></table></div>
+  </section>
+  <div class="cols">
+    <section class="panel">
+      <div class="panel-h"><h2>Por día</h2>${acciones("dias")}</div>
+      <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Fecha</th><th>Presentes</th><th>Retardos</th><th>Faltas</th></tr></thead>
+      <tbody>${porDia.map(r => `<tr><td>${esc(fechaLarga(r.f))}</td><td class="n">${r.A}</td><td class="n">${r.T}</td><td class="n">${r.F}</td></tr>`).join("") || `<tr><td colspan="4" class="muted">Sin días hábiles en el rango</td></tr>`}</tbody></table></div>
+    </section>
+    <section class="panel">
+      <div class="panel-h"><h2>Constancias</h2>${acciones("constancias")}</div>
+      <label class="check"><input type="checkbox" id="solo-const" data-cambio="solo-const" ${S.rep.soloConstancias ? "checked" : ""}><span>Mostrar solo llegadas tarde y salidas tempranas</span></label>
+      ${consts.length ? `<div class="log">${consts.map(m => itemBitacora(m).replace('<span class="num">', `<span class="num" title="${esc(m.fecha)}">${m.fecha.slice(8)}/${m.fecha.slice(5, 7)}<br>`)).join("")}</div>` : `<div class="empty">Sin registros en este rango.</div>`}
+    </section>
+  </div>`;
+}
+
+function tablaTexto(filas, sep) {
+  return filas.map(r => r.map(c => {
+    const s = String(c ?? "");
+    if (sep === ",") return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    return s.replace(/[\t\n]/g, " ");
+  }).join(sep)).join("\n");
+}
+
+/* =============================================================
+   VISTA: AJUSTES
+   ============================================================= */
+function vistaAjustes() {
+  const c = S.cfg; const t = v => String(v || "").slice(0, 5);
+  const cfgSb = LS.get("gafetes.sb", null);
+  return `
+  <section class="head"><div><h1>Ajustes</h1></div></section>
+  <form class="panel" data-form="config">
+    <div class="panel-h"><h2>Escuela y horarios</h2>${esAdmin() ? "" : '<span class="muted">Solo la dirección puede cambiarlos</span>'}</div>
+    <div class="grid-f">
+      <label class="field wide"><span>Nombre de la escuela (aparece en el gafete)</span><input id="c-escuela" name="escuela" value="${esc(c.escuela)}" required ${esAdmin() ? "" : "disabled"}></label>
+      <label class="field"><span>Hora de entrada</span><input id="c-entrada" name="hora_entrada" type="time" value="${t(c.hora_entrada)}" required ${esAdmin() ? "" : "disabled"}></label>
+      <label class="field"><span>Tolerancia (minutos)</span><input id="c-tol" name="tolerancia_min" type="number" min="0" max="120" value="${esc(c.tolerancia_min)}" required ${esAdmin() ? "" : "disabled"}></label>
+      <label class="field"><span>Hora límite: después es falta</span><input id="c-limite" name="hora_limite" type="time" value="${t(c.hora_limite)}" required ${esAdmin() ? "" : "disabled"}></label>
+      <label class="field"><span>Hora de salida</span><input id="c-salida" name="hora_salida" type="time" value="${t(c.hora_salida)}" required ${esAdmin() ? "" : "disabled"}></label>
+      <label class="field wide"><span>Dirección pública de la app (se graba en los gafetes)</span><input id="c-url" name="url_publica" type="url" value="${esc(c.url_publica || "")}" placeholder="https://tuusuario.github.io/gafetes/" ${esAdmin() ? "" : "disabled"}></label>
+    </div>
+    <p class="muted" style="font-size:.88rem">Cambia la dirección pública solo antes de grabar las tarjetas: los gafetes ya grabados apuntan a la dirección anterior.</p>
+    ${esAdmin() ? `<div><button class="btn pri" type="submit">Guardar ajustes</button></div>` : ""}
+  </form>
+  <section class="panel">
+    <h2>Conexión</h2>
+    ${DB.demo ? `
+      <p>Estás en <b>modo demo</b>. Para usarlo con tu escuela, crea un proyecto en Supabase, corre el archivo <span class="mono">supabase-esquema.sql</span> y pega aquí la URL y la clave pública (anon).</p>
+      <form class="grid-f" data-form="conexion">
+        <label class="field wide"><span>Project URL</span><input id="sb-url" name="url" type="url" placeholder="https://xxxx.supabase.co" required></label>
+        <label class="field wide"><span>Clave anon public</span><input id="sb-key" name="key" required></label>
+        <div class="row wide"><button class="btn pri" type="submit">Conectar</button><button class="btn" type="button" data-act="reiniciar-demo">Reiniciar datos de ejemplo</button></div>
+      </form>` : `
+      <p>Sesión: <b>${esc(S.user?.email)}</b> · ${esAdmin() ? "Dirección (administrador)" : "Docente"}</p>
+      <div class="row"><button class="btn" data-act="salir">Cerrar sesión</button>${!CONFIG.SUPABASE_URL && cfgSb ? `<button class="btn danger" data-act="olvidar-conexion">Desconectar este dispositivo</button>` : ""}</div>`}
+  </section>
+  <section class="panel">
+    <h2>Cómo se leen los gafetes</h2>
+    <p><b>Android:</b> abre esta app en Chrome y toca <b>Leer gafete</b>, o simplemente acerca el gafete con la pantalla desbloqueada.</p>
+    <p><b>iPhone (XS o más nuevo):</b> acerca el gafete a la parte de arriba del teléfono con la pantalla desbloqueada; aparece un aviso para abrir el sistema.</p>
+    <p><b>Grabar tarjetas:</b> desde un Android con Chrome usa <b>Grabar en tarjeta</b> en la ficha del alumno. En iPhone, copia el enlace y grábalo con la app gratuita NFC Tools (Escribir → URL).</p>
+  </section>`;
+}
+
+/* =============================================================
+   LECTURA DE GAFETES
+   ============================================================= */
+function modal(html) {
+  const m = document.getElementById("modal");
+  m.innerHTML = `<div class="sheet-m" role="dialog" aria-modal="true">${html}</div>`;
+  m.hidden = false; document.body.style.overflow = "hidden";
+  hidratarFotos(m);
+  const f = m.querySelector("[autofocus]"); if (f) f.focus();
+}
+function cerrarModal() {
+  const m = document.getElementById("modal");
+  m.hidden = true; m.innerHTML = ""; document.body.style.overflow = "";
+  if (S.nfcCtrl) { try { S.nfcCtrl.abort(); } catch {} S.nfcCtrl = null; }
+}
+
+function extraerToken(texto) {
+  if (!texto) return null;
+  try { const u = new URL(texto); return u.searchParams.get("g"); } catch {}
+  const m = String(texto).match(/[?&]g=([a-f0-9]{8,})/i); if (m) return m[1];
+  return /^[a-f0-9]{16,}$/i.test(texto.trim()) ? texto.trim() : null;
+}
+
+async function abrirLector() {
+  const nfc = "NDEFReader" in window;
+  const sim = S.gafetes.filter(g => g.activo).slice(0, 60);
+  modal(`
+    <div class="m-head"><h2>Leer gafete</h2><button class="x" data-act="cerrar" aria-label="Cerrar">×</button></div>
+    ${nfc ? `<div class="nfc-wave">${ICON.nfc}</div><p style="text-align:center"><b>Acerca el gafete a la parte trasera del celular</b></p><p class="muted" id="nfc-estado" style="text-align:center">Esperando tarjeta…</p>`
+      : `<p class="muted">Este navegador no lee NFC directamente. En <b>iPhone</b> acerca el gafete con la pantalla desbloqueada y toca el aviso que aparece. En <b>Android</b> usa Chrome.</p>`}
+    <form class="row" data-form="token" style="align-items:end">
+      <label class="field" style="flex:1"><span>O escribe / pega el código del gafete</span><input id="tok" name="tok" class="inp mono" placeholder="Código o enlace" autocomplete="off"></label>
+      <button class="btn" type="submit">Abrir</button>
+    </form>
+    ${DB.demo ? `<div class="field"><span>Simular la lectura de un gafete de ejemplo</span><div class="sim-list">${sim.map(g => { const a = alumno(g.alumno_id); const t = g.tutor_id ? tutor(g.tutor_id) : null; if (!a) return ""; return `<button class="btn" data-act="simular" data-token="${g.token}"><span><b>${esc(t ? t.nombre : nombreCompleto(a))}</b> <span class="muted">${t ? "· " + esc(TIPOS[g.tipo]) + " de " + esc(a.nombre) : "· alumno"}</span></span><span class="mono muted">…${g.token.slice(-4)}</span></button>`; }).join("")}</div></div>` : ""}
+  `);
+  if (nfc) {
+    try {
+      const reader = new NDEFReader(); const ctrl = new AbortController(); S.nfcCtrl = ctrl;
+      await reader.scan({ signal: ctrl.signal });
+      reader.onreadingerror = () => { const e = document.getElementById("nfc-estado"); if (e) e.textContent = "No se pudo leer. Deja la tarjeta quieta un segundo."; };
+      reader.onreading = ev => {
+        let token = null;
+        for (const rec of ev.message.records) {
+          if (rec.recordType === "url" || rec.recordType === "absolute-url" || rec.recordType === "text") {
+            const txt = new TextDecoder(rec.encoding || "utf-8").decode(rec.data);
+            token = extraerToken(txt); if (token) break;
+          }
+        }
+        if (!token && ev.serialNumber) {
+          const uid = ev.serialNumber.replace(/:/g, "").toUpperCase();
+          const g = S.gafetes.find(x => x.uid_nfc === uid); if (g) token = g.token;
+        }
+        ctrl.abort(); S.nfcCtrl = null;
+        if (token) abrirGafete(token); else modalError("Tarjeta sin datos del sistema", "Esta tarjeta no tiene un gafete grabado. Grábala desde la ficha del alumno.");
+      };
+    } catch (e) {
+      const el = document.getElementById("nfc-estado");
+      if (el) el.textContent = e.name === "NotAllowedError" ? "Permite el acceso a NFC en Chrome para leer gafetes." : e.name === "NotSupportedError" ? "Este celular no tiene NFC o está apagado. Actívalo en Ajustes del teléfono." : "No se pudo iniciar el lector NFC: " + e.message;
+    }
+  }
+}
+
+function modalError(titulo, texto) {
+  modal(`<div class="m-head"><h2>${esc(titulo)}</h2><button class="x" data-act="cerrar" aria-label="Cerrar">×</button></div>
+    <div class="alert"><b>Aviso</b><span>${esc(texto)}</span></div>
+    <div class="row"><button class="btn pri" data-act="leer">Leer otro gafete</button><button class="btn" data-act="cerrar">Cerrar</button></div>`);
+}
+
+async function abrirGafete(token) {
+  let g = S.gafetes.find(x => x.token === token);
+  if (!g) { const r = await DB.select("gafetes", { eq: { token } }); g = r[0]; }
+  if (!g) return modalError("Gafete no registrado", "Este código no pertenece a ningún gafete del sistema. Puede ser una tarjeta ajena o de otra escuela.");
+  if (!g.activo) return modalError("Gafete desactivado", "Este gafete fue repuesto o reportado como perdido. No debe usarse para entregar al alumno. Retén la tarjeta y avisa a la dirección.");
+  const a = alumno(g.alumno_id);
+  if (!a) return modalError("Alumno dado de baja", "El alumno de este gafete ya no está activo en la escuela.");
+  const t = g.tutor_id ? tutor(g.tutor_id) : null;
+  if (g.tipo !== "alumno" && (!t || !t.activo)) return modalError("Tutor sin autorización", "La persona de este gafete ya no está autorizada.");
+  const f = hoyISO();
+  const movs = await DB.select("movimientos", { eq: { alumno_id: a.id, fecha: f }, order: ["fecha_hora", false] });
+  const ent = movs.find(m => m.tipo === "entrada"); const sal = movs.filter(m => m.tipo === "salida").pop();
+  S.lectura = { g, a, t, ent, sal, accion: null };
+  pintarLectura();
+}
+
+function condicionAhora(tipo) {
+  if (tipo === "entrada") return ahoraMin() > minutos(S.cfg.hora_entrada) + Number(S.cfg.tolerancia_min || 0) ? "tarde" : "normal";
+  return ahoraMin() < minutos(S.cfg.hora_salida) ? "temprano" : "normal";
+}
+
+function pintarLectura() {
+  const { g, a, t, ent, sal, accion } = S.lectura;
+  const e = edad(a.fecha_nacimiento);
+  const alerta = tieneAlerta(a) ? `<div class="alert"><b>Atención médica</b>${a.alergias ? `<span><strong>Alergias:</strong> ${esc(a.alergias)}</span>` : ""}${a.medicamentos ? `<span><strong>Medicamentos:</strong> ${esc(a.medicamentos)}</span>` : ""}${a.condiciones_medicas ? `<span><strong>Condición:</strong> ${esc(a.condiciones_medicas)}</span>` : ""}</div>` : "";
+  const estado = sal ? `<span class="pill s-salio">Salió ${hhmm(new Date(sal.fecha_hora))}</span>` : ent ? `<span class="pill s-${ent.condicion === "tarde" ? "tarde" : "presente"}">Entró ${hhmm(new Date(ent.fecha_hora))}</span>` : `<span class="pill s-pendiente">Sin entrada hoy</span>`;
+  const alumnoMini = `<div class="row" style="flex-wrap:nowrap">${foto(a.foto_path, nombreCompleto(a), "lg")}<div style="display:grid;gap:4px;min-width:0"><span class="eyebrow">${esc(grupoDe(a))}${e != null ? ` · ${e} años` : ""}</span><h3 style="font-size:1.25rem">${esc(nombreCompleto(a))}</h3>${estado}${a.caracteristicas ? `<span class="muted" style="font-size:.86rem">Señas: ${esc(a.caracteristicas)}</span>` : ""}</div></div>`;
+
+  const cond = accion ? condicionAhora(accion) : null;
+  const motivoBox = accion && cond !== "normal" ? `
+    <label class="field"><span>${cond === "tarde" ? `Llega después de las ${String(S.cfg.hora_entrada).slice(0, 5)} + ${S.cfg.tolerancia_min} min. Motivo del retardo` : `Sale antes de las ${String(S.cfg.hora_salida).slice(0, 5)}. Motivo de la salida temprana`} (queda como constancia)</span>
+    <textarea id="motivo" rows="3" required placeholder="${cond === "tarde" ? "Ej. cita médica, tráfico…" : "Ej. cita con el dentista, enfermedad…"}"></textarea></label>` : "";
+
+  let cuerpo;
+  if (g.tipo === "alumno") {
+    cuerpo = `
+      <div class="m-head"><span class="eyebrow">Gafete de alumno</span><button class="x" data-act="cerrar" aria-label="Cerrar">×</button></div>
+      ${alumnoMini}${alerta}
+      ${!ent ? `<div class="field"><span>Registrar llegada sin tutor (transporte escolar o llega solo)</span>
+        <div class="choice" style="grid-template-columns:1fr"><button class="btn big" data-act="accion" data-a="entrada" aria-pressed="${accion === "entrada"}">Entrada<small>${condicionAhora("entrada") === "tarde" ? "Con retardo" : "A tiempo"} · ${hhmm(new Date())}</small></button></div></div>` : ""}
+      ${motivoBox}
+      ${accion ? `<button class="btn ok big" data-act="registrar">Confirmar entrada ${hhmm(new Date())}</button>` : ""}
+      <p class="muted" style="font-size:.88rem">La salida se registra con el gafete de papá, mamá o la persona autorizada.</p>
+      <div class="row"><button class="btn" data-act="ficha-modal" data-id="${a.id}">Ver ficha completa</button><button class="btn" data-act="leer">Leer otro gafete</button></div>`;
+  } else {
+    cuerpo = `
+      <div class="m-head"><span class="eyebrow">Gafete de ${esc(TIPOS[g.tipo].toLowerCase())}</span><button class="x" data-act="cerrar" aria-label="Cerrar">×</button></div>
+      <div class="verif">
+        ${foto(t.foto_path, t.nombre, "xl")}
+        <div style="display:grid;gap:8px;min-width:0;width:100%">
+          <div><h2>${esc(t.nombre)}</h2><p class="muted">${esc(t.parentesco || TIPOS[t.tipo])}${t.telefono ? ` · <span class="mono">${esc(t.telefono)}</span>` : ""}</p></div>
+          <div class="ine-big">${t.ine_path ? `<img data-foto="${esc(t.ine_path)}" alt="INE de ${esc(t.nombre)}" hidden>` : ""}<span>Sin INE registrada</span></div>
+        </div>
+      </div>
+      <label class="check"><input type="checkbox" id="verif"><span><b>Cotejé a la persona</b> con la foto y la INE: es quien aparece en el gafete.</span></label>
+      <div class="field"><span>Alumno</span>${alumnoMini}</div>
+      ${alerta}
+      <div class="choice">
+        <button class="btn big" data-act="accion" data-a="entrada" aria-pressed="${accion === "entrada"}" ${ent ? "disabled" : ""}>Deja al alumno<small>${ent ? "Ya entró " + hhmm(new Date(ent.fecha_hora)) : "Entrada · " + (condicionAhora("entrada") === "tarde" ? "con retardo" : "a tiempo")}</small></button>
+        <button class="btn big" data-act="accion" data-a="salida" aria-pressed="${accion === "salida"}" ${sal ? "disabled" : ""}>Recoge al alumno<small>${sal ? "Ya salió " + hhmm(new Date(sal.fecha_hora)) : "Salida · " + (condicionAhora("salida") === "temprano" ? "temprana" : "normal")}</small></button>
+      </div>
+      ${motivoBox}
+      ${accion ? `<button class="btn ok big" data-act="registrar">Confirmar ${accion} ${hhmm(new Date())}</button>` : ""}
+      <p class="err" id="lec-err" hidden></p>`;
+  }
+  const motivoPrev = document.getElementById("motivo")?.value || "";
+  const verifPrev = document.getElementById("verif")?.checked || false;
+  modal(cuerpo);
+  if (motivoPrev && document.getElementById("motivo")) document.getElementById("motivo").value = motivoPrev;
+  if (verifPrev && document.getElementById("verif")) document.getElementById("verif").checked = true;
+}
+
+async function registrarMovimiento() {
+  const L = S.lectura; if (!L || !L.accion) return;
+  const cond = condicionAhora(L.accion);
+  const motivo = (document.getElementById("motivo")?.value || "").trim();
+  const errEl = document.getElementById("lec-err");
+  const fallar = msg => { if (errEl) { errEl.textContent = msg; errEl.hidden = false; } toast(msg, "bad"); };
+  if (L.g.tipo !== "alumno" && !document.getElementById("verif")?.checked) return fallar("Marca que cotejaste a la persona con su foto e INE.");
+  if (cond !== "normal" && !motivo) { document.getElementById("motivo")?.focus(); return fallar("Escribe el motivo: queda como constancia."); }
+  const ahora = new Date(); const f = hoyISO();
+  await DB.insert("movimientos", {
+    alumno_id: L.a.id, tutor_id: L.t ? L.t.id : null, tipo: L.accion, condicion: cond, motivo: motivo || null,
+    identidad_verificada: L.g.tipo !== "alumno", fecha: f, fecha_hora: ahora.toISOString(), dispositivo: "celular"
+  });
+  if (L.accion === "entrada") {
+    await DB.upsert("asistencias", { alumno_id: L.a.id, fecha: f, estado: "A", tarde: cond === "tarde", origen: "gafete", updated_at: ahora.toISOString() }, ["alumno_id", "fecha"]);
+  }
+  cerrarModal();
+  toast(`${L.accion === "entrada" ? "Entrada" : "Salida"} de ${L.a.nombre} registrada a las ${hhmm(ahora)}`);
+  render();
+}
+
+/* ---------- Grabar tarjeta NFC (Android + Chrome) ---------- */
+async function grabarTarjeta(id) {
+  const g = S.gafetes.find(x => x.id === id); if (!g) return;
+  const url = urlGafete(g.token);
+  modal(`<div class="m-head"><h2>Grabar tarjeta</h2><button class="x" data-act="cerrar" aria-label="Cerrar">×</button></div>
+    <div class="nfc-wave">${ICON.nfc}</div>
+    <p style="text-align:center"><b>Acerca la tarjeta en blanco y déjala quieta</b></p>
+    <p class="muted" id="nfc-estado" style="text-align:center">Se grabará: <span class="mono" style="word-break:break-all">${esc(url)}</span></p>`);
+  try {
+    const reader = new NDEFReader(); const ctrl = new AbortController(); S.nfcCtrl = ctrl;
+    await reader.scan({ signal: ctrl.signal });
+    const alLeer = async ev => {
+      reader.onreading = null;
+      const est = document.getElementById("nfc-estado");
+      try {
+        await reader.write({ records: [{ recordType: "url", data: url }] });
+        const uid = ev.serialNumber ? ev.serialNumber.replace(/:/g, "").toUpperCase() : null;
+        if (uid) await DB.update("gafetes", g.id, { uid_nfc: uid });
+        ctrl.abort(); S.nfcCtrl = null;
+        await cargarBase(); cerrarModal(); toast("Tarjeta grabada"); render();
+      } catch (e) {
+        if (est) est.textContent = "No se pudo grabar: " + traducirError(e.message) + ". Acerca la tarjeta otra vez y déjala quieta.";
+        reader.onreading = alLeer;
+      }
+    };
+    reader.onreading = alLeer;
+  } catch (e) {
+    const est = document.getElementById("nfc-estado");
+    if (est) est.textContent = e.name === "NotAllowedError" ? "Permite el acceso a NFC en Chrome para grabar." : "No se pudo iniciar NFC: " + e.message;
+  }
+}
+
+/* =============================================================
+   ACCIONES
+   ============================================================= */
+async function asegurarGafete(alumnoId, tipo, tutorId = null) {
+  const ya = S.gafetes.find(g => g.alumno_id === alumnoId && g.tipo === tipo && g.activo);
+  if (ya) return ya;
+  return DB.insert("gafetes", { alumno_id: alumnoId, tutor_id: tutorId, tipo });
+}
+
+const ACT = {
+  ir: el => { S.fichaId = null; cerrarModal(); if (location.hash.slice(1) !== el.dataset.v) location.hash = el.dataset.v; else { S.view = el.dataset.v; render(); } },
+  leer: () => abrirLector(),
+  cerrar: () => cerrarModal(),
+  recargar: () => render(),
+  ficha: el => { S.fichaId = el.dataset.id; S.view = "ficha"; render(); window.scrollTo(0, 0); },
+  "ficha-modal": el => { cerrarModal(); S.fichaId = el.dataset.id; S.view = "ficha"; render(); window.scrollTo(0, 0); },
+  "nuevo-alumno": () => { S.fichaId = "nuevo"; S.view = "ficha"; render(); window.scrollTo(0, 0); },
+  celda: el => toggleCelda(el),
+  simular: el => abrirGafete(el.dataset.token),
+  accion: el => { if (el.disabled) return; S.lectura.accion = S.lectura.accion === el.dataset.a ? null : el.dataset.a; pintarLectura(); },
+  registrar: () => registrarMovimiento(),
+  grabar: el => grabarTarjeta(el.dataset.id),
+  "copiar-enlace": el => { const g = S.gafetes.find(x => x.id === el.dataset.id); if (g) copiar(urlGafete(g.token)); },
+  reponer: async el => {
+    if (el.dataset.armado !== "1") { el.dataset.armado = "1"; el.textContent = "¿Desactivar y crear nuevo?"; setTimeout(() => { if (el.isConnected) { el.dataset.armado = ""; el.textContent = "Reponer"; } }, 5000); return; }
+    const g = S.gafetes.find(x => x.id === el.dataset.id);
+    await DB.update("gafetes", g.id, { activo: false, uid_nfc: null });
+    await DB.insert("gafetes", { alumno_id: g.alumno_id, tutor_id: g.tutor_id, tipo: g.tipo });
+    await cargarBase(); toast("Gafete anterior desactivado. Graba la tarjeta nueva."); render();
+  },
+  baja: async el => {
+    if (el.dataset.armado !== "1") { el.dataset.armado = "1"; el.textContent = "Confirmar baja"; return; }
+    await DB.update("alumnos", el.dataset.id, { activo: false });
+    for (const g of S.gafetes.filter(x => x.alumno_id === el.dataset.id && x.activo)) await DB.update("gafetes", g.id, { activo: false });
+    await cargarBase(); toast("Alumno dado de baja"); location.hash = "alumnos"; S.view = "alumnos"; S.fichaId = null; render();
+  },
+  "copiar-tabla": el => copiar(tablaTexto(S._tablas[el.dataset.t], "\t")),
+  csv: el => {
+    const blob = new Blob(["﻿" + tablaTexto(S._tablas[el.dataset.t], ",")], { type: "text/csv;charset=utf-8" });
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+    a.download = `${el.dataset.t}-${S.rep.desde}_a_${S.rep.hasta}.csv`; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  },
+  salir: async () => { if (DB && !DB.demo) await DB.sb.auth.signOut(); location.reload(); },
+  "olvidar-conexion": async () => { try { if (DB && !DB.demo) await DB.sb.auth.signOut(); } catch {} LS.del("gafetes.sb"); location.reload(); },
+  "reiniciar-demo": async el => {
+    if (el.dataset.armado !== "1") { el.dataset.armado = "1"; el.textContent = "Confirmar: borrar cambios del demo"; return; }
+    DB.reiniciar(); await cargarBase(); toast("Datos de ejemplo reiniciados"); S.view = "hoy"; location.hash = "hoy"; render();
+  }
+};
+
+const FORM = {
+  login: async form => {
+    const fd = new FormData(form);
+    const btn = form.querySelector('[type="submit"]'); btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Entrando…';
+    const { data, error } = await DB.sb.auth.signInWithPassword({ email: fd.get("email").trim(), password: fd.get("pass") });
+    if (error) return pantallaLogin(traducirError(error.message));
+    await entrar(data.user);
+  },
+  conexion: async form => {
+    const fd = new FormData(form);
+    const url = fd.get("url").trim().replace(/\/+$/, ""); const key = fd.get("key").trim();
+    if (!/^https:\/\/.+/.test(url)) return toast("La URL debe empezar con https://", "bad");
+    LS.set("gafetes.sb", { url, key }); location.reload();
+  },
+  alumno: async form => {
+    const fd = new FormData(form); const row = {};
+    for (const [k, v] of fd.entries()) row[k] = String(v).trim() || null;
+    row.nombre = row.nombre || ""; row.apellidos = row.apellidos || ""; row.grado = row.grado || ""; row.grupo = row.grupo || "";
+    row.estatura_cm = row.estatura_cm ? Number(row.estatura_cm) : null;
+    let id = S.fichaId;
+    if (id === "nuevo") {
+      const nuevo = await DB.insert("alumnos", { ...row, activo: true });
+      id = nuevo.id;
+      await DB.insert("gafetes", { alumno_id: id, tutor_id: null, tipo: "alumno" });
+      toast("Alumno agregado. Ahora registra a sus tutores.");
+    } else {
+      await DB.update("alumnos", id, row);
+      toast("Datos guardados");
+    }
+    await cargarBase(); S.fichaId = id; render();
+  },
+  tutor: async form => {
+    const fd = new FormData(form); const tipo = form.dataset.tipo; const id = form.dataset.id;
+    const row = { nombre: fd.get("nombre").trim(), parentesco: fd.get("parentesco").trim() || null, telefono: fd.get("telefono").trim() || null };
+    if (id) { await DB.update("tutores", id, row); toast("Tutor guardado"); }
+    else {
+      const t = await DB.insert("tutores", { ...row, alumno_id: S.fichaId, tipo, activo: true });
+      await asegurarGafete(S.fichaId, tipo, t.id);
+      toast(`${TIPOS[tipo]} registrado. Sube su foto y su INE.`);
+    }
+    await cargarBase(); render();
+  },
+  token: form => {
+    const tok = extraerToken(new FormData(form).get("tok"));
+    if (!tok) return toast("Ese código no es válido", "bad");
+    abrirGafete(tok);
+  },
+  rango: form => {
+    const fd = new FormData(form);
+    const desde = fd.get("desde"), hasta = fd.get("hasta");
+    if (desde > hasta) return toast("La fecha inicial debe ser antes que la final", "bad");
+    S.rep = { ...S.rep, desde, hasta }; render();
+  },
+  config: async form => {
+    const fd = new FormData(form);
+    const patch = { escuela: fd.get("escuela").trim(), hora_entrada: fd.get("hora_entrada"), tolerancia_min: Number(fd.get("tolerancia_min")), hora_limite: fd.get("hora_limite"), hora_salida: fd.get("hora_salida"), url_publica: (fd.get("url_publica") || "").trim() || null, updated_at: new Date().toISOString() };
+    if (minutos(patch.hora_limite) < minutos(patch.hora_entrada)) return toast("La hora límite debe ser después de la hora de entrada", "bad");
+    await DB.update("config", 1, patch); await cargarBase(); toast("Ajustes guardados"); render();
+  }
+};
+
+const CAMBIO = {
+  grupo: el => { S.grupo = el.value; LS.set("gafetes.grupo", S.grupo); render(); },
+  mes: el => { if (el.value) { S.mes = el.value; render(); } },
+  "solo-const": el => { S.rep.soloConstancias = el.checked; render(); },
+  buscar: el => {
+    const q = el.value.trim().toLowerCase();
+    document.querySelectorAll("#cards .card").forEach(c => { c.hidden = q && !c.dataset.busca.includes(q); });
+  },
+  subir: async el => {
+    const file = el.files && el.files[0]; if (!file) return;
+    const kind = el.dataset.kind;
+    const lbl = el.closest("label"); if (lbl) lbl.firstChild.textContent = "Subiendo… ";
+    const blob = await reducirImagen(file, kind === "tutor-ine" ? 1100 : 720);
+    const alId = S.fichaId;
+    if (kind === "alumno") {
+      const path = await DB.upload(`${alId}/alumno-${Date.now()}.jpg`, blob);
+      await DB.update("alumnos", alId, { foto_path: path });
+    } else {
+      const t = S.tutores.find(x => x.alumno_id === alId && x.tipo === el.dataset.tipo);
+      if (!t) { toast("Primero registra el nombre de esta persona.", "bad"); render(); return; }
+      const path = await DB.upload(`${alId}/${el.dataset.tipo}-${kind === "tutor-ine" ? "ine" : "foto"}-${Date.now()}.jpg`, blob);
+      await DB.update("tutores", t.id, kind === "tutor-ine" ? { ine_path: path } : { foto_path: path });
+    }
+    await cargarBase(); toast("Imagen guardada"); render();
+  }
+};
+
+async function ejecutar(fn, ...args) {
+  try { await fn(...args); }
+  catch (err) { console.error(err); toast(traducirError(err.message || String(err)), "bad"); }
+}
+document.addEventListener("click", e => {
+  const el = e.target.closest("[data-act]"); if (!el) return;
+  const fn = ACT[el.dataset.act]; if (!fn) return;
+  e.preventDefault(); ejecutar(fn, el, e);
+});
+document.addEventListener("submit", e => {
+  const fn = FORM[e.target.dataset.form]; if (!fn) return;
+  e.preventDefault(); ejecutar(fn, e.target);
+});
+document.addEventListener("change", e => {
+  const el = e.target.closest("[data-cambio]"); if (!el || el.dataset.cambio === "buscar") return;
+  ejecutar(CAMBIO[el.dataset.cambio], el);
+});
+document.addEventListener("input", e => { if (e.target.dataset?.cambio === "buscar") CAMBIO.buscar(e.target); });
+document.getElementById("modal").addEventListener("click", e => { if (e.target.id === "modal") cerrarModal(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !document.getElementById("modal").hidden) cerrarModal(); });
+
+iniciar().catch(e => {
+  console.error(e);
+  document.getElementById("app").innerHTML = `<div class="gate"><div class="panel"><h2>No se pudo iniciar</h2><p class="err">${esc(traducirError(e.message))}</p><button class="btn" data-act="recargar" onclick="location.reload()">Recargar</button></div></div>`;
+});
+</script>
+
+</body>
+</html>
